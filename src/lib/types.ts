@@ -1,102 +1,51 @@
-export type FeedbackType = "bug" | "suggestion" | "complaint" | "praise";
-export type Sentiment = "negative" | "neutral" | "positive" | "mixed";
-export type Status =
-  | "new"
-  | "logged"
-  | "synced"
-  | "replied"
-  | "closed";
-export type Priority = "P0" | "P1" | "P2";
+export type CategoryRow = {
+  id: string;
+  name: string;
+  count: number;
+  share: number;
+  summary: string;
+  suggestion: string;
+};
 
 export type Quote = {
   id: string;
-  user: string;
-  channel: string;
-  type: FeedbackType;
-  sentiment: Sentiment;
-  issueId: string;
-  time: string;
+  categoryId: string;
+  category: string;
   text: string;
-  status: Status;
 };
 
-export type Issue = {
+export type WeekReport = {
   id: string;
-  title: string;
-  summary: string;
-  type: FeedbackType;
-  priority: Priority | null;
-  mentions: number;
-  delta: number;
-  status: Status;
-  owner: string;
-};
-
-export type DailyPoint = {
-  date: string;
   label: string;
-  positive: number;
-  negative: number;
-  volume: number;
+  range: string;
+  rangeShort: string;
+  total: number;
+  narrative: string;
+  judgment: string;
+  categories: CategoryRow[];
+  quotes: Quote[];
 };
 
 export type TrendPoint = {
-  weekNo: number;
+  id: string;
   label: string;
   range: string;
-  positive: number;
-  negative: number;
   volume: number;
 };
 
 export type StandingIssue = {
-  id: string;
-  title: string;
-  type: FeedbackType;
-  mentions: number;
+  name: string;
   weekCount: number;
-  status: Status;
-  owner: string;
+  mentions: number;
 };
 
 export type BoardOverall = {
   weekCount: number;
   range: string;
   feedback: number;
-  reporters: number;
-  avgPositive: number;
-  avgNegative: number;
-  types: Record<FeedbackType, number>;
   standing: StandingIssue[];
   trend: TrendPoint[];
+  topCategories: { name: string; count: number }[];
   narrative: string;
   judgment: string;
-};
-
-export type WeekReport = {
-  id: string;
-  weekNo: number;
-  range: string;
-  rangeShort: string;
-  narrative: string;
-  judgment: string;
-  totals: {
-    feedback: number;
-    feedbackDelta: number;
-    uniqueReporters: number;
-    synced: number;
-    pending: number;
-    replied: number;
-  };
-  types: Record<FeedbackType, { count: number; delta: number }>;
-  sentiment: {
-    negative: number;
-    neutral: number;
-    positive: number;
-  };
-  daily: DailyPoint[];
-  issues: Issue[];
-  quotes: Quote[];
-  pipeline: { status: Status; label: string; count: number }[];
-  channels: { name: string; count: number }[];
 };

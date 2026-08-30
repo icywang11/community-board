@@ -6,8 +6,8 @@ import { ArrowRight, Search, X } from "lucide-react";
 
 import { FinderWindow } from "@/components/board/finder-window";
 import { Input } from "@/components/ui/input";
-import { statusLabel, summarizeBoard, typeMeta } from "@/lib/data";
-import type { FeedbackType, Quote, WeekReport } from "@/lib/types";
+import { summarizeBoard } from "@/lib/data";
+import type { Quote, WeekReport } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const chapters = [
@@ -21,36 +21,47 @@ function scrollToId(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
+function pct(share: number) {
+  return `${(share * 100).toFixed(1)}%`;
+}
+
 export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
   const [weekId, setWeekId] = useState(weeks[0].id);
-  const [typeFilter, setTypeFilter] = useState<FeedbackType | "all">("all");
-  const [issueFilter, setIssueFilter] = useState<string | "all">("all");
+  const [categoryFilter, setCategoryFilter] = useState<string | "all">("all");
   const [query, setQuery] = useState("");
   const [activeQuote, setActiveQuote] = useState<Quote | null>(null);
 
   const week = weeks.find((item) => item.id === weekId) ?? weeks[0];
   const overall = useMemo(() => summarizeBoard(weeks), [weeks]);
+  const topFour = week.categories.slice(0, 4);
+  const maxTrend = Math.max(...overall.trend.map((item) => item.volume), 1);
 
   const quotes = useMemo(() => {
     return week.quotes.filter((quote) => {
-      if (typeFilter !== "all" && quote.type !== typeFilter) return false;
-      if (issueFilter !== "all" && quote.issueId !== issueFilter) return false;
+      if (categoryFilter !== "all" && quote.categoryId !== categoryFilter) {
+        return false;
+      }
       if (!query.trim()) return true;
       const q = query.trim().toLowerCase();
       return (
         quote.text.toLowerCase().includes(q) ||
-        quote.user.toLowerCase().includes(q) ||
-        quote.channel.toLowerCase().includes(q)
+        quote.category.toLowerCase().includes(q)
       );
     });
-  }, [week, typeFilter, issueFilter, query]);
+  }, [week, categoryFilter, query]);
 
-  const selectedIssue = week.issues.find((item) => item.id === issueFilter);
+  const selectedCategory = week.categories.find(
+    (item) => item.id === categoryFilter
+  );
 
   function resetFilters() {
-    setTypeFilter("all");
-    setIssueFilter("all");
+    setCategoryFilter("all");
     setQuery("");
+  }
+
+  function selectWeek(id: string) {
+    setWeekId(id);
+    resetFilters();
   }
 
   return (
@@ -69,26 +80,23 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               社区舆情看板
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-black/50">
-              周更看板。先看整体大盘，再点进某一周的概览、议题和原话。
+              周更看板，数据来自社区反馈表。先看整体大盘，再点进某一周的类型、议题和原话。
             </p>
           </div>
 
-          <div className="flex flex-col items-start gap-3 lg:items-end">
+          <div className="flex max-w-xl flex-col items-start gap-3 lg:items-end">
             <p className="font-serif text-[15px] tracking-[0.22em] text-black/70">
               周更 · {overall.range}
             </p>
             <p className="text-[11px] tracking-[0.14em] text-black/40">
               选择周次，只替换本周及以下栏目
             </p>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex max-h-24 flex-wrap justify-start gap-2 overflow-y-auto lg:justify-end">
               {weeks.map((item) => (
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => {
-                    setWeekId(item.id);
-                    resetFilters();
-                  }}
+                  onClick={() => selectWeek(item.id)}
                   className={cn(
                     "rounded-full border px-3 py-1 font-serif text-sm tracking-wide transition-colors",
                     item.id === week.id
@@ -140,7 +148,6 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <h3 className="relative mt-1 font-display text-[32px] leading-none sm:text-[38px]">
               <span className="font-serif">01</span> 整体舆情
             </h3>
-
             <FinderWindow
               className="relative mt-8"
               title="社区舆情看板 / 目录"
@@ -178,7 +185,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-black/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/10" />
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between text-[10px] tracking-[0.18em] text-white/80">
                 <span>社区看板</span>
                 <span>Chapter 01</span>
@@ -194,30 +201,13 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                   {overall.narrative}
                 </p>
               </div>
-              <div className="absolute bottom-4 right-4 hidden w-[92px] flex-col gap-2 sm:flex">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-white/40">
-                  <Image
-                    src="/editorial/rose-inset.jpg"
-                    alt=""
-                    fill
-                    className="object-cover grayscale"
-                    sizes="92px"
-                  />
-                </div>
-                <div className="relative h-16 overflow-hidden rounded-xl border border-white/40">
-                  <Image
-                    src="/editorial/tulips.jpg"
-                    alt=""
-                    fill
-                    className="object-cover grayscale"
-                    sizes="92px"
-                  />
-                </div>
-              </div>
             </div>
           </article>
 
-          <article id="week" className="paper-card relative min-h-[320px] overflow-hidden rounded-[28px]">
+          <article
+            id="week"
+            className="paper-card relative min-h-[320px] overflow-hidden rounded-[28px]"
+          >
             <Image
               src="/editorial/tulips.jpg"
               alt=""
@@ -229,7 +219,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <div className="relative p-7 sm:p-8">
               <div className="flex items-start justify-between gap-3 text-[10px] tracking-[0.18em] text-black/40">
                 <span>Chapter 02</span>
-                <span>Week {week.weekNo}</span>
+                <span>{week.rangeShort}</span>
               </div>
               <h2 className="mt-6 font-display text-[28px] leading-none sm:text-[34px]">
                 02 本周概览
@@ -238,16 +228,14 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 {week.narrative}
               </p>
               <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {(Object.keys(typeMeta) as FeedbackType[]).map((type) => {
-                  const meta = typeMeta[type];
-                  const active = typeFilter === type;
+                {topFour.map((category, index) => {
+                  const active = categoryFilter === category.id;
                   return (
                     <button
-                      key={type}
+                      key={category.id}
                       type="button"
                       onClick={() => {
-                        setTypeFilter(active ? "all" : type);
-                        setIssueFilter("all");
+                        setCategoryFilter(active ? "all" : category.id);
                         if (!active) scrollToId("quotes");
                       }}
                       className={cn(
@@ -263,14 +251,11 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                           active ? "text-white/70" : "text-black/40"
                         )}
                       >
-                        {meta.no}
+                        {String(index + 1).padStart(2, "0")}
                       </p>
-                      <p className="mt-2 font-serif text-lg leading-none">
-                        {meta.en}
-                      </p>
-                      <p className="mt-1 text-[12px]">{meta.zh}</p>
+                      <p className="mt-2 text-[13px] leading-5">{category.name}</p>
                       <p className="mt-3 font-serif text-2xl tabular-nums">
-                        {week.types[type].count}
+                        {category.count}
                       </p>
                       <p
                         className={cn(
@@ -278,8 +263,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                           active ? "text-white/70" : "text-black/40"
                         )}
                       >
-                        {week.types[type].delta >= 0 ? "+" : ""}
-                        {week.types[type].delta} 周环比
+                        {pct(category.share)}
                       </p>
                     </button>
                   );
@@ -312,11 +296,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               />
               <button
                 type="button"
-                onClick={() =>
-                  document.getElementById("issues")?.scrollIntoView({
-                    behavior: "smooth",
-                  })
-                }
+                onClick={() => scrollToId("issues")}
                 className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm"
                 aria-label="查看高频议题"
               >
@@ -344,7 +324,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               </div>
               <div className="max-w-[28rem]">
                 <p className="text-[14px] leading-6 text-white/85">
-                  高频议题按重复次数排序。点一条，下面的原话会收成这一题。
+                  本周类型按条数排序。点一条，原话会收成这一类。
                 </p>
                 <h2 className="mt-4 font-display text-[30px] leading-none text-white sm:text-[36px]">
                   03 高频议题
@@ -362,7 +342,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 DIRECTORY
               </h2>
               <p className="pt-1 text-right text-[10px] leading-4 tracking-[0.16em] text-black/40">
-                volume {String(week.weekNo).padStart(2, "0")}
+                {week.quotes.length} quotes
                 <br />
                 Voices
               </p>
@@ -375,22 +355,31 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             </h3>
             <FinderWindow
               className="relative mt-8"
-              title="Chapter 04 / 处理进度"
-              path="待确认 / 已记录 / 已同步 / 已回复 / 关闭"
+              title="Chapter 04 / 本周类型"
+              path={week.categories
+                .slice(0, 4)
+                .map((item) => item.name)
+                .join(" / ")}
             >
               <ul>
-                {week.pipeline.map((item) => (
-                  <li
-                    key={item.status}
-                    className="flex items-center gap-3 px-3 py-2.5 text-[13px]"
-                  >
-                    <span className="inline-flex size-7 items-center justify-center rounded-md bg-white text-[11px]">
-                      ▢
-                    </span>
-                    <span className="flex-1">{item.label}</span>
-                    <span className="font-serif text-base tabular-nums">
-                      {item.count}
-                    </span>
+                {week.categories.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCategoryFilter(item.id);
+                        scrollToId("quotes");
+                      }}
+                      className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-[13px] hover:bg-white/70"
+                    >
+                      <span className="inline-flex size-7 items-center justify-center rounded-md bg-white font-serif text-[11px]">
+                        {item.count}
+                      </span>
+                      <span className="flex-1">{item.name}</span>
+                      <span className="font-serif text-base tabular-nums text-black/40">
+                        {pct(item.share)}
+                      </span>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -401,26 +390,25 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         <p className="mt-10 font-serif text-[12px] tracking-[0.28em] text-black/35">
           CHAPTER 01 · 整体舆情
         </p>
-        <section className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+        <section className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {[
             ["累计反馈", overall.feedback, `${overall.weekCount} 周`],
-            ["累计发言", overall.reporters, "人次"],
-            ["四周正向率", `${overall.avgPositive}%`, `负向 ${overall.avgNegative}%`],
-            ["跨周未关", overall.standing.length, "重复议题"],
-            ["缺陷累计", overall.types.bug, "条"],
-            ["建议累计", overall.types.suggestion, "条"],
+            ["覆盖区间", overall.range.replace("2026.", ""), "周更"],
+            ["本周反馈", week.total, week.rangeShort],
+            ["跨周反复", overall.standing.length, "主题"],
+            [
+              "累计最高",
+              overall.topCategories[0]?.count ?? 0,
+              overall.topCategories[0]?.name ?? "—",
+            ],
+            ["本周类型", week.categories.length, "类"],
           ].map(([label, value, note]) => (
-            <div
-              key={String(label)}
-              className="paper-card rounded-[22px] px-4 py-4"
-            >
-              <p className="text-[11px] tracking-[0.14em] text-black/40">
-                {label}
-              </p>
-              <p className="mt-2 font-serif text-[28px] leading-none tabular-nums">
+            <div key={String(label)} className="paper-card rounded-[22px] px-4 py-4">
+              <p className="text-[11px] tracking-[0.14em] text-black/40">{label}</p>
+              <p className="mt-2 font-serif text-[22px] leading-none tabular-nums sm:text-[26px]">
                 {value}
               </p>
-              <p className="mt-2 text-[11px] text-black/40">{note}</p>
+              <p className="mt-2 truncate text-[11px] text-black/40">{note}</p>
             </div>
           ))}
         </section>
@@ -429,54 +417,42 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-                CHAPTER 01 · WEEKLY TREND
+                CHAPTER 01 · WEEKLY VOLUME
               </p>
-              <h2 className="mt-1 font-display text-2xl">周度情绪</h2>
+              <h2 className="mt-1 font-display text-2xl">周反馈量</h2>
             </div>
             <p className="max-w-md text-[13px] leading-5 text-black/45">
-              {overall.judgment} 柱高是当周反馈量，深色是负向占比。
+              {overall.judgment} 点某一周可切到该周概览。
             </p>
           </div>
-          <div className="mt-8 flex items-end gap-2 sm:gap-4">
+          <div className="mt-8 flex items-end gap-1 overflow-x-auto pb-2 sm:gap-2">
             {overall.trend.map((point) => {
-              const height = 40 + point.volume * 1.2;
-              const active = point.weekNo === week.weekNo;
+              const height = 28 + (point.volume / maxTrend) * 88;
+              const active = point.id === week.id;
               return (
                 <button
-                  key={point.weekNo}
+                  key={point.id}
                   type="button"
                   onClick={() => {
-                    const match = weeks.find((item) => item.weekNo === point.weekNo);
-                    if (match) {
-                      setWeekId(match.id);
-                      resetFilters();
-                      scrollToId("week");
-                    }
+                    selectWeek(point.id);
+                    scrollToId("week");
                   }}
-                  className="group flex flex-1 flex-col items-center gap-2"
+                  className="group flex min-w-8 flex-1 flex-col items-center gap-2"
                 >
                   <div
                     className={cn(
-                      "relative w-full max-w-14 overflow-hidden rounded-full",
-                      active ? "bg-ink/15" : "bg-black/8"
+                      "w-full max-w-8 rounded-full",
+                      active ? "bg-ink" : "bg-black/20 group-hover:bg-ink/70"
                     )}
                     style={{ height }}
-                  >
-                    <span
-                      className="absolute bottom-0 left-0 right-0 bg-ink/80"
-                      style={{ height: `${point.negative}%` }}
-                    />
-                  </div>
+                  />
                   <span
                     className={cn(
-                      "font-serif text-sm",
-                      active ? "text-ink" : "text-black/50 group-hover:text-ink"
+                      "text-[9px] tracking-wide",
+                      active ? "text-ink" : "text-black/40"
                     )}
                   >
-                    {point.label}
-                  </span>
-                  <span className="text-[10px] tabular-nums text-black/35">
-                    {point.range}
+                    {point.label.split("-")[0]}
                   </span>
                 </button>
               );
@@ -486,17 +462,12 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <ul className="mt-8 divide-y divide-black/8 border-t border-black/8">
               {overall.standing.map((item) => (
                 <li
-                  key={item.id}
+                  key={item.name}
                   className="flex flex-wrap items-baseline justify-between gap-2 py-3 text-[13px]"
                 >
-                  <span>
-                    <span className="font-display text-[16px]">{item.title}</span>
-                    <span className="ml-2 text-black/40">
-                      {typeMeta[item.type].zh} · 连续 {item.weekCount} 周
-                    </span>
-                  </span>
+                  <span className="font-display text-[16px]">{item.name}</span>
                   <span className="font-serif tabular-nums text-black/45">
-                    {item.mentions} 条 · {statusLabel[item.status]}
+                    {item.weekCount} 周进入前三 · {item.mentions} 条
                   </span>
                 </li>
               ))}
@@ -505,81 +476,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         </section>
 
         <p className="mt-10 font-serif text-[12px] tracking-[0.28em] text-black/35">
-          CHAPTER 02 · 本周概览 · WEEK {week.weekNo}
-        </p>
-        <section className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-          {[
-            ["有效反馈", week.totals.feedback, `${week.totals.feedbackDelta >= 0 ? "+" : ""}${week.totals.feedbackDelta}%`],
-            ["发言人数", week.totals.uniqueReporters, "本周"],
-            ["已同步研发", week.totals.synced, "闭环"],
-            ["待确认", week.totals.pending, "需盯"],
-            ["已回复社区", week.totals.replied, "可见"],
-            [
-              "正向率",
-              `${week.sentiment.positive}%`,
-              `负向 ${week.sentiment.negative}%`,
-            ],
-          ].map(([label, value, note]) => (
-            <div
-              key={label}
-              className="paper-card rounded-[22px] px-4 py-4"
-            >
-              <p className="text-[11px] tracking-[0.14em] text-black/40">
-                {label}
-              </p>
-              <p className="mt-2 font-serif text-[28px] leading-none tabular-nums">
-                {value}
-              </p>
-              <p className="mt-2 text-[11px] text-black/40">{note}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="paper-card mt-5 rounded-[28px] p-6 sm:p-8">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-                CHAPTER 02 · SENTIMENT ARC
-              </p>
-              <h2 className="mt-1 font-display text-2xl">情绪弧线</h2>
-            </div>
-            <p className="max-w-md text-[13px] leading-5 text-black/45">
-              柱高是当日反馈量，深色是负向占比。点日期可筛原话。
-            </p>
-          </div>
-          <div className="mt-8 flex items-end gap-2 sm:gap-3">
-            {week.daily.map((day) => {
-              const height = 36 + day.volume * 6;
-              return (
-                <button
-                  key={day.date}
-                  type="button"
-                  onClick={() => setQuery(day.date)}
-                  className="group flex flex-1 flex-col items-center gap-2"
-                >
-                  <div
-                    className="relative w-full max-w-12 overflow-hidden rounded-full bg-black/8"
-                    style={{ height }}
-                  >
-                    <span
-                      className="absolute bottom-0 left-0 right-0 bg-ink/80"
-                      style={{ height: `${day.negative}%` }}
-                    />
-                  </div>
-                  <span className="font-serif text-sm text-black/50 group-hover:text-ink">
-                    {day.label}
-                  </span>
-                  <span className="text-[10px] tabular-nums text-black/35">
-                    {day.date.slice(3)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <p className="mt-10 font-serif text-[12px] tracking-[0.28em] text-black/35">
-          CHAPTER 03 · 高频议题
+          CHAPTER 03 · 高频议题 · {week.rangeShort}
         </p>
         <section className="mt-3 grid grid-cols-1 gap-5 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="paper-card rounded-[28px] p-6 sm:p-8">
@@ -588,65 +485,49 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
                   CHAPTER 03 · ISSUE INDEX
                 </p>
-                <h2 className="mt-1 font-display text-2xl">高频议题</h2>
+                <h2 className="mt-1 font-display text-2xl">本周类型</h2>
               </div>
-              {issueFilter !== "all" && (
+              {categoryFilter !== "all" && (
                 <button
                   type="button"
-                  onClick={() => setIssueFilter("all")}
+                  onClick={() => setCategoryFilter("all")}
                   className="text-[12px] tracking-wide text-black/45 hover:text-ink"
                 >
-                  清除议题筛选
+                  清除筛选
                 </button>
               )}
             </div>
             <ul className="mt-6 divide-y divide-black/8">
-              {week.issues.map((issue, index) => {
-                const active = issueFilter === issue.id;
+              {week.categories.map((item, index) => {
+                const active = categoryFilter === item.id;
                 return (
-                  <li key={issue.id}>
+                  <li key={item.id}>
                     <button
                       type="button"
                       onClick={() => {
-                        setIssueFilter(active ? "all" : issue.id);
-                        setTypeFilter("all");
-                        document.getElementById("quotes")?.scrollIntoView({
-                          behavior: "smooth",
-                        });
+                        setCategoryFilter(active ? "all" : item.id);
+                        scrollToId("quotes");
                       }}
                       className={cn(
                         "flex w-full gap-4 py-4 text-left transition-colors",
-                        active && "bg-mist -mx-3 rounded-2xl px-3"
+                        active && "-mx-3 rounded-2xl bg-mist px-3"
                       )}
                     >
                       <span className="w-8 shrink-0 font-serif text-lg text-black/30">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="flex flex-wrap items-center gap-2">
-                          <span className="font-display text-[17px]">
-                            {issue.title}
-                          </span>
-                          {issue.priority && (
-                            <span className="rounded-full border border-black/15 px-2 py-0.5 text-[10px] tracking-wider">
-                              {issue.priority}
-                            </span>
-                          )}
-                          <span className="text-[11px] text-black/40">
-                            {typeMeta[issue.type].zh} · {statusLabel[issue.status]}
-                          </span>
-                        </span>
+                        <span className="font-display text-[17px]">{item.name}</span>
                         <span className="mt-1 block text-[13px] leading-5 text-black/50">
-                          {issue.summary}
+                          {item.summary}
                         </span>
                       </span>
                       <span className="shrink-0 text-right">
                         <span className="block font-serif text-2xl leading-none tabular-nums">
-                          {issue.mentions}
+                          {item.count}
                         </span>
                         <span className="text-[11px] text-black/35">
-                          {issue.delta >= 0 ? "+" : ""}
-                          {issue.delta} 条
+                          {pct(item.share)}
                         </span>
                       </span>
                     </button>
@@ -658,34 +539,27 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
 
           <div className="paper-card rounded-[28px] p-6 sm:p-8">
             <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-              CHANNELS
+              SHARE
             </p>
-            <h2 className="mt-1 font-display text-2xl">来源频道</h2>
+            <h2 className="mt-1 font-display text-2xl">类型占比</h2>
             <ul className="mt-6 space-y-4">
-              {week.channels.map((channel) => {
-                const max = week.channels[0]?.count || 1;
-                return (
-                  <li key={channel.name}>
-                    <div className="flex items-baseline justify-between text-[13px]">
-                      <span className="font-serif">{channel.name}</span>
-                      <span className="tabular-nums text-black/40">
-                        {channel.count}
-                      </span>
-                    </div>
-                    <div className="mt-2 h-[3px] overflow-hidden rounded-full bg-black/8">
-                      <div
-                        className="h-full bg-ink"
-                        style={{ width: `${(channel.count / max) * 100}%` }}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
+              {week.categories.map((item) => (
+                <li key={item.id}>
+                  <div className="flex items-baseline justify-between gap-3 text-[13px]">
+                    <span className="truncate">{item.name}</span>
+                    <span className="shrink-0 tabular-nums text-black/40">
+                      {item.count}
+                    </span>
+                  </div>
+                  <div className="mt-2 h-[3px] overflow-hidden rounded-full bg-black/8">
+                    <div
+                      className="h-full bg-ink"
+                      style={{ width: `${Math.min(item.share * 100, 100)}%` }}
+                    />
+                  </div>
+                </li>
+              ))}
             </ul>
-            <p className="mt-8 text-[12px] leading-5 text-black/40">
-              #bug-report 仍是缺陷主入口。#general
-              的建议容易被组队消息盖住，这是拆频道的证据，不是观感。
-            </p>
           </div>
         </section>
 
@@ -700,11 +574,9 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               </p>
               <h2 className="mt-1 font-display text-2xl">原话摘录</h2>
               <p className="mt-2 text-[13px] text-black/45">
-                {selectedIssue
-                  ? `正在看「${selectedIssue.title}」相关原话。`
-                  : typeFilter === "all"
-                    ? "从 Discord 线程里抽出的可引用句子。"
-                    : `正在看「${typeMeta[typeFilter].zh}」分类。`}
+                {selectedCategory
+                  ? `正在看「${selectedCategory.name}」相关原话。`
+                  : "表里摘出的玩家原文。"}
               </p>
             </div>
             <div className="flex w-full max-w-md items-center gap-2">
@@ -713,13 +585,11 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 <Input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="搜用户、频道或原话"
+                  placeholder="搜类型或原话"
                   className="h-10 rounded-full border-black/10 bg-mist pl-9"
                 />
               </div>
-              {(typeFilter !== "all" ||
-                issueFilter !== "all" ||
-                query.trim()) && (
+              {(categoryFilter !== "all" || query.trim()) && (
                 <button
                   type="button"
                   onClick={resetFilters}
@@ -735,7 +605,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <div className="mt-10 rounded-3xl border border-dashed border-black/15 px-6 py-16 text-center">
               <p className="font-display text-xl">没有匹配的原话</p>
               <p className="mt-2 text-sm text-black/45">
-                换一个分类，或清空筛选后再看本周摘录。
+                换一个类型，或清空筛选后再看本周摘录。
               </p>
               <button
                 type="button"
@@ -754,23 +624,12 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                     onClick={() => setActiveQuote(quote)}
                     className="paper-card h-full w-full rounded-[22px] border border-black/5 p-5 text-left transition-transform hover:-translate-y-0.5"
                   >
-                    <div className="flex items-center justify-between gap-3 text-[11px] tracking-wide text-black/40">
-                      <span>
-                        {quote.user} · {quote.channel}
-                      </span>
-                      <span>{quote.time}</span>
-                    </div>
+                    <p className="text-[11px] tracking-wide text-black/40">
+                      {quote.category}
+                    </p>
                     <p className="mt-3 font-display text-[16px] leading-7">
                       “{quote.text}”
                     </p>
-                    <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-black/45">
-                      <span className="rounded-full bg-mist px-2 py-0.5">
-                        {typeMeta[quote.type].zh}
-                      </span>
-                      <span className="rounded-full bg-mist px-2 py-0.5">
-                        {statusLabel[quote.status]}
-                      </span>
-                    </div>
                   </button>
                 </li>
               ))}
@@ -794,7 +653,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
           onClick={() => setActiveQuote(null)}
         >
           <div
-            className="paper-card relative w-full max-w-xl rounded-[28px] p-6 sm:p-8"
+            className="paper-card relative max-h-[80vh] w-full max-w-xl overflow-y-auto rounded-[28px] p-6 sm:p-8"
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -809,36 +668,19 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               QUOTE
             </p>
             <h3 className="mt-2 font-display text-2xl">原话详情</h3>
+            <p className="mt-2 text-[13px] text-black/45">{activeQuote.category}</p>
             <p className="mt-5 font-display text-[18px] leading-8">
               “{activeQuote.text}”
             </p>
-            <dl className="mt-6 grid grid-cols-2 gap-3 text-[13px]">
-              <div>
-                <dt className="text-black/40">成员</dt>
-                <dd>{activeQuote.user}</dd>
-              </div>
-              <div>
-                <dt className="text-black/40">频道</dt>
-                <dd>{activeQuote.channel}</dd>
-              </div>
-              <div>
-                <dt className="text-black/40">时间</dt>
-                <dd>{activeQuote.time}</dd>
-              </div>
-              <div>
-                <dt className="text-black/40">状态</dt>
-                <dd>{statusLabel[activeQuote.status]}</dd>
-              </div>
-            </dl>
             <button
               type="button"
               onClick={() => {
-                setIssueFilter(activeQuote.issueId);
+                setCategoryFilter(activeQuote.categoryId);
                 setActiveQuote(null);
               }}
               className="mt-6 rounded-full bg-ink px-4 py-2 text-sm text-white"
             >
-              只看该议题
+              只看该类型
             </button>
           </div>
         </div>
