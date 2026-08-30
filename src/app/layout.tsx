@@ -21,9 +21,9 @@ const notoSerif = Noto_Serif_SC({
 });
 
 export const metadata: Metadata = {
-  title: "H72 社区舆情看板 · 收集反馈",
+  title: "社区舆情看板 · 收集反馈",
   description:
-    "H72 Discord 社区周报「收集反馈」看板：本周议题、情绪判断、原话摘录与处理闭环。",
+    "Discord 社区周报「收集反馈」看板：本周议题、情绪判断、原话摘录与处理闭环。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

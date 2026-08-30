@@ -58,7 +58,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         <header className="mb-8 flex flex-col gap-6 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-serif text-[11px] tracking-[0.38em] text-black/45">
-              H72 DISCORD · COMMUNITY BOARD
+              DISCORD · 社区看板
             </p>
             <h1 className="mt-2 font-display text-[34px] leading-none tracking-tight sm:text-[44px]">
               社区舆情看板
@@ -96,7 +96,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         </header>
 
         <nav className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-black/10 pb-3 text-[12px] tracking-[0.18em] text-black/40">
-          <span className="font-serif tracking-[0.28em] text-black/55">@H72</span>
+          <span className="font-serif tracking-[0.28em] text-black/55">社区</span>
           {nav.map((item, index) => (
             <a
               key={item.id}
@@ -139,7 +139,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <FinderWindow
               className="relative mt-8"
               title={`Chapter 04 / week ${week.weekNo}`}
-              path="H72 / Discord / 收集反馈"
+              path="社区 / Discord / 收集反馈"
             >
               <ul>
                 {(
@@ -188,7 +188,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-black/10" />
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between text-[10px] tracking-[0.18em] text-white/80">
-                <span>@H72 BOARD</span>
+                <span>社区看板</span>
                 <span>本周主线</span>
               </div>
               <div className="absolute bottom-4 left-4 right-4 max-w-[78%]">
@@ -236,7 +236,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <div className="absolute inset-0 bg-white/55" />
             <div className="relative p-7 sm:p-8">
               <div className="flex items-start justify-between gap-3 text-[10px] tracking-[0.18em] text-black/40">
-                <span>@H72</span>
+                <span>社区</span>
                 <span>Feedback / Workflow</span>
               </div>
               <h2 className="mt-6 font-display text-[28px] leading-none sm:text-[34px]">
@@ -678,7 +678,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             / EDITORIAL LAYOUT · SECTION IV
           </p>
           <p className="rounded-full border border-black/10 bg-white px-4 py-2 font-serif text-sm tracking-[0.18em]">
-            @H72 BOARD
+            社区看板
           </p>
         </footer>
       </div>
