@@ -1,26 +1,8 @@
+import { adviseStanding, familyName } from "@/lib/playbook";
 import raw from "./feedback.json";
 import type { BoardOverall, StandingIssue, WeekReport } from "./types";
 
 export const weeks = raw.weeks as WeekReport[];
-
-const FAMILY_RULES: [RegExp, string][] = [
-  [/战斗|平衡|PVP|竞技|Combat/i, "战斗与平衡"],
-  [/Bug|性能|技术|延迟|网络|服务器/i, "性能与技术"],
-  [/社交|公会|匹配/i, "社交与公会"],
-  [/外观|美术|视听|建模|Art/i, "外观与视听"],
-  [/界面|交互|Interface/i, "界面与交互"],
-  [/经济|付费|抽卡|奖励/i, "经济与付费"],
-  [/家园/i, "家园系统"],
-  [/武学|Martial/i, "武学内容"],
-  [/探索/i, "探索与地图"],
-];
-
-function familyName(name: string): string {
-  for (const [pattern, label] of FAMILY_RULES) {
-    if (pattern.test(name)) return label;
-  }
-  return name;
-}
 
 export function summarizeBoard(allWeeks: WeekReport[]): BoardOverall {
   const chronological = [...allWeeks].reverse();
@@ -32,7 +14,10 @@ export function summarizeBoard(allWeeks: WeekReport[]): BoardOverall {
     volume: week.total,
   }));
 
-  const standingMap = new Map<string, StandingIssue>();
+  const standingMap = new Map<
+    string,
+    StandingIssue & { recent: string[] }
+  >();
   for (const week of chronological) {
     for (const category of week.categories.slice(0, 3)) {
       const name = familyName(category.name);
@@ -42,18 +27,26 @@ export function summarizeBoard(allWeeks: WeekReport[]): BoardOverall {
           name,
           weekCount: 1,
           mentions: category.count,
+          product: [],
+          ops: [],
+          recent: category.suggestion ? [category.suggestion] : [],
         });
       } else {
         prev.weekCount += 1;
         prev.mentions += category.count;
+        if (category.suggestion) prev.recent.push(category.suggestion);
       }
     }
   }
 
   const standing = [...standingMap.values()]
-    .filter((item) => item.weekCount >= 4)
+    .filter((item) => item.weekCount >= 4 && item.name !== "其他")
     .sort((a, b) => b.weekCount - a.weekCount || b.mentions - a.mentions)
-    .slice(0, 6);
+    .slice(0, 6)
+    .map(({ recent, ...item }) => ({
+      ...item,
+      ...adviseStanding(item.name, recent.slice(-3)),
+    }));
 
   const catTotals = new Map<string, number>();
   for (const week of allWeeks) {
@@ -81,8 +74,8 @@ export function summarizeBoard(allWeeks: WeekReport[]): BoardOverall {
     standing,
     trend,
     topCategories,
-    narrative: `近 ${allWeeks.length} 周累计有效反馈 ${feedback} 条。反复出现的是${standingTitles}。单周情绪不能代替这条跨周主线，点进某一周只看当周结构。`,
+    narrative: `近 ${allWeeks.length} 周累计有效反馈 ${feedback} 条。反复出现的是${standingTitles}。下面按主题给了改法和运营动作，点进某一周再看当周结构。`,
     judgment:
-      "先看跨周反复出现的类型，再看本周新冒头的条目。表里的分类每周口径会变，整体按主题归并。",
+      "跨周反复的主题优先处理。每条都拆成产品 / 设计建议，以及运营这周能先做的事。",
   };
 }

@@ -37,6 +37,8 @@ export type StandingIssue = {
   name: string;
   weekCount: number;
   mentions: number;
+  product: string[];
+  ops: string[];
 };
 
 export type BoardOverall = {

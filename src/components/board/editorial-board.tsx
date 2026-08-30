@@ -7,6 +7,7 @@ import { ArrowRight, Search, X } from "lucide-react";
 import { FinderWindow } from "@/components/board/finder-window";
 import { Input } from "@/components/ui/input";
 import { summarizeBoard } from "@/lib/data";
+import { adviseCategory, adviseWeek } from "@/lib/playbook";
 import type { Quote, WeekReport } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,45 @@ const monthNames = [
   "十一月",
   "十二月",
 ];
+
+function AdviceList({
+  product,
+  ops,
+  stacked = false,
+}: {
+  product: string[];
+  ops: string[];
+  stacked?: boolean;
+}) {
+  return (
+    <div className={cn("grid gap-5", !stacked && "sm:grid-cols-2")}>
+      <div>
+        <p className="font-serif text-[11px] tracking-[0.2em] text-black/40">
+          产品 / 设计
+        </p>
+        <ul className="mt-2 space-y-2">
+          {product.map((item) => (
+            <li key={item} className="text-[13px] leading-6 text-black/70">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p className="font-serif text-[11px] tracking-[0.2em] text-black/40">
+          运营后续
+        </p>
+        <ul className="mt-2 space-y-2">
+          {ops.map((item) => (
+            <li key={item} className="text-[13px] leading-6 text-black/70">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
 
 function weeksByMonth(weeks: WeekReport[]) {
   const map = new Map<number, WeekReport[]>();
@@ -81,6 +121,14 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
   const selectedCategory = week.categories.find(
     (item) => item.id === categoryFilter
   );
+  const weekAdvice = useMemo(() => adviseWeek(week), [week]);
+  const selectedAdvice = selectedCategory
+    ? adviseCategory(selectedCategory)
+    : weekAdvice;
+  const quoteCategory = activeQuote
+    ? week.categories.find((item) => item.id === activeQuote.categoryId)
+    : undefined;
+  const quoteAdvice = quoteCategory ? adviseCategory(quoteCategory) : null;
 
   function resetFilters() {
     setCategoryFilter("all");
@@ -127,7 +175,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               社区舆情看板
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-black/50">
-              周更看板，数据来自社区反馈表。先看整体大盘，再点进某一周的类型、议题和原话。
+              周更看板。先看整体反复出现的主题和对应动作，再点进某一周的类型、建议和原话。
             </p>
           </div>
 
@@ -191,7 +239,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <FinderWindow
               className="relative mt-8"
               title="社区舆情看板 / 目录"
-              path="整体 / 本周 / 议题 / 原话"
+              path="整体 / 本周 / 议题 / 建议 / 原话"
             >
               <ul>
                 {chapters.map((chapter) => (
@@ -285,7 +333,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                       type="button"
                       onClick={() => {
                         setCategoryFilter(active ? "all" : category.id);
-                        if (!active) scrollToId("quotes");
+                        if (!active) scrollToId("advice");
                       }}
                       className={cn(
                         "rounded-2xl border px-3 py-4 text-left transition-colors",
@@ -323,16 +371,40 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
 
           <article className="flex min-h-[320px] flex-col gap-4">
             <div className="paper-card flex flex-1 flex-col justify-between rounded-[28px] p-7 sm:p-8">
-              <p className="max-w-[36rem] text-[15px] leading-7 text-black/70 sm:text-[17px]">
-                {week.judgment}
-              </p>
-              <div className="mt-8">
-                <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-                  CHAPTER 02 · THIS WEEK
+              <div>
+                <p className="max-w-[36rem] text-[15px] leading-7 text-black/70 sm:text-[17px]">
+                  {week.judgment}
                 </p>
-                <h2 className="mt-2 font-display text-[28px] leading-none sm:text-[34px]">
-                  本周判断
-                </h2>
+                <p className="mt-6 font-serif text-[11px] tracking-[0.2em] text-black/40">
+                  运营可以先做
+                </p>
+                <ul className="mt-2 space-y-2">
+                  {weekAdvice.ops.slice(0, 3).map((item) => (
+                    <li
+                      key={item}
+                      className="text-[13px] leading-6 text-black/60"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-8 flex items-end justify-between gap-3">
+                <div>
+                  <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
+                    CHAPTER 02 · THIS WEEK
+                  </p>
+                  <h2 className="mt-2 font-display text-[28px] leading-none sm:text-[34px]">
+                    本周判断
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => scrollToId("advice")}
+                  className="text-[12px] tracking-wide text-black/45 underline-offset-4 hover:text-ink hover:underline"
+                >
+                  看建议
+                </button>
               </div>
             </div>
             <div className="paper-card relative h-[88px] overflow-hidden rounded-[28px]">
@@ -373,7 +445,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               </div>
               <div className="max-w-[28rem]">
                 <p className="text-[14px] leading-6 text-white/85">
-                  本周类型按条数排序。点一条，原话会收成这一类。
+                  本周类型按条数排序。点一条，看对应的改法和运营能做的事。
                 </p>
                 <h2 className="mt-4 font-display text-[30px] leading-none text-white sm:text-[36px]">
                   03 高频议题
@@ -417,7 +489,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                       type="button"
                       onClick={() => {
                         setCategoryFilter(item.id);
-                        scrollToId("quotes");
+                        scrollToId("advice");
                       }}
                       className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-[13px] hover:bg-white/70"
                     >
@@ -471,7 +543,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               <h2 className="mt-1 font-display text-2xl">周反馈量</h2>
             </div>
             <p className="max-w-md text-[13px] leading-5 text-black/45">
-              {overall.judgment} 点某一周可切到该周概览。
+              {overall.judgment}
             </p>
           </div>
           <div className="mt-8 flex items-end gap-1 overflow-x-auto pb-2 sm:gap-2">
@@ -508,19 +580,30 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             })}
           </div>
           {overall.standing.length > 0 && (
-            <ul className="mt-8 divide-y divide-black/8 border-t border-black/8">
-              {overall.standing.map((item) => (
-                <li
-                  key={item.name}
-                  className="flex flex-wrap items-baseline justify-between gap-2 py-3 text-[13px]"
-                >
-                  <span className="font-display text-[16px]">{item.name}</span>
-                  <span className="font-serif tabular-nums text-black/45">
-                    {item.weekCount} 周进入前三 · {item.mentions} 条
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-8 border-t border-black/8 pt-6">
+              <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
+                STANDING ISSUES
+              </p>
+              <h3 className="mt-1 font-display text-xl">跨周反复 · 怎么处理</h3>
+              <p className="mt-2 max-w-xl text-[13px] leading-5 text-black/45">
+                多次进入当周前三的主题。左边是给制作组的改法，右边是运营这周就能做的事。
+              </p>
+              <ul className="mt-4 divide-y divide-black/8">
+                {overall.standing.map((item) => (
+                  <li key={item.name} className="py-5">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2 text-[13px]">
+                      <span className="font-display text-[18px]">{item.name}</span>
+                      <span className="font-serif tabular-nums text-black/45">
+                        {item.weekCount} 周进入前三 · {item.mentions} 条
+                      </span>
+                    </div>
+                    <div className="mt-3">
+                      <AdviceList product={item.product} ops={item.ops} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </section>
 
@@ -555,7 +638,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                       type="button"
                       onClick={() => {
                         setCategoryFilter(active ? "all" : item.id);
-                        scrollToId("quotes");
+                        scrollToId("advice");
                       }}
                       className={cn(
                         "flex w-full gap-4 py-4 text-left transition-colors",
@@ -586,30 +669,59 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             </ul>
           </div>
 
-          <div className="paper-card rounded-[28px] p-6 sm:p-8">
+          <aside
+            id="advice"
+            className="paper-card rounded-[28px] p-6 sm:p-8 lg:sticky lg:top-6 lg:self-start"
+          >
             <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-              SHARE
+              CHAPTER 03 · ACTIONS
             </p>
-            <h2 className="mt-1 font-display text-2xl">类型占比</h2>
-            <ul className="mt-6 space-y-4">
-              {week.categories.map((item) => (
-                <li key={item.id}>
-                  <div className="flex items-baseline justify-between gap-3 text-[13px]">
-                    <span className="truncate">{item.name}</span>
-                    <span className="shrink-0 tabular-nums text-black/40">
-                      {item.count}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-[3px] overflow-hidden rounded-full bg-black/8">
-                    <div
-                      className="h-full bg-ink"
-                      style={{ width: `${Math.min(item.share * 100, 100)}%` }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <h2 className="mt-1 font-display text-2xl">
+              {selectedCategory ? selectedCategory.name : "建议与动作"}
+            </h2>
+            <p className="mt-2 text-[13px] leading-5 text-black/45">
+              {selectedCategory
+                ? selectedCategory.summary
+                : "未点类型时，先看本周前几条该怎么处理。点左侧一条，建议会换成这一类。"}
+            </p>
+            <div className="mt-6">
+              <AdviceList
+                product={selectedAdvice.product}
+                ops={selectedAdvice.ops}
+                stacked
+              />
+            </div>
+            {selectedCategory && (
+              <button
+                type="button"
+                onClick={() => scrollToId("quotes")}
+                className="mt-6 rounded-full bg-ink px-4 py-2 text-sm text-white"
+              >
+                看这类原话
+              </button>
+            )}
+            {!selectedCategory && (
+              <ul className="mt-6 space-y-3 border-t border-black/8 pt-5">
+                {week.categories.slice(0, 4).map((item) => (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCategoryFilter(item.id);
+                        scrollToId("advice");
+                      }}
+                      className="flex w-full items-baseline justify-between gap-3 text-left text-[13px] hover:text-ink"
+                    >
+                      <span className="truncate">{item.name}</span>
+                      <span className="shrink-0 font-serif tabular-nums text-black/40">
+                        {item.count}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </aside>
         </section>
 
         <section
@@ -624,7 +736,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               <h2 className="mt-1 font-display text-2xl">原话摘录</h2>
               <p className="mt-2 text-[13px] text-black/45">
                 {selectedCategory
-                  ? `正在看「${selectedCategory.name}」相关原话。`
+                  ? `正在看「${selectedCategory.name}」相关原话。上面有这类的改法和运营动作。`
                   : "表里摘出的玩家原文。"}
               </p>
             </div>
@@ -792,16 +904,39 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <p className="mt-5 font-display text-[18px] leading-8">
               “{activeQuote.text}”
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                setCategoryFilter(activeQuote.categoryId);
-                setActiveQuote(null);
-              }}
-              className="mt-6 rounded-full bg-ink px-4 py-2 text-sm text-white"
-            >
-              只看该类型
-            </button>
+            {quoteAdvice && (
+              <div className="mt-6 border-t border-black/8 pt-5">
+                <AdviceList
+                  product={quoteAdvice.product.slice(0, 2)}
+                  ops={quoteAdvice.ops.slice(0, 2)}
+                  stacked
+                />
+              </div>
+            )}
+            <div className="mt-6 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setCategoryFilter(activeQuote.categoryId);
+                  setActiveQuote(null);
+                  scrollToId("advice");
+                }}
+                className="rounded-full bg-ink px-4 py-2 text-sm text-white"
+              >
+                看这类建议
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCategoryFilter(activeQuote.categoryId);
+                  setActiveQuote(null);
+                  scrollToId("quotes");
+                }}
+                className="rounded-full border border-black/15 px-4 py-2 text-sm"
+              >
+                只看该类型原话
+              </button>
+            </div>
           </div>
         </div>
       )}
