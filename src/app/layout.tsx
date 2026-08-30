@@ -23,7 +23,7 @@ const notoSerif = Noto_Serif_SC({
 export const metadata: Metadata = {
   title: "社区舆情看板",
   description:
-    "Discord 社区舆情看板：本周概览、反馈分类、高频议题与原话摘录。",
+    "Discord 社区舆情看板：整体大盘、本周概览、高频议题与原话摘录。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

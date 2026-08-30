@@ -1,4 +1,9 @@
-import type { FeedbackType, WeekReport } from "./types";
+import type {
+  BoardOverall,
+  FeedbackType,
+  StandingIssue,
+  WeekReport,
+} from "./types";
 
 export const typeMeta: Record<
   FeedbackType,
@@ -437,4 +442,261 @@ export const weeks: WeekReport[] = [
       },
     ],
   },
+  {
+    id: "w33",
+    weekNo: 33,
+    range: "2026.08.10 — 08.16",
+    rangeShort: "08.10 – 08.16",
+    narrative:
+      "反馈 68 条，大盘偏稳。语音房卡顿第一次变成重复信号，夜间模式仍是零散建议。没有事故，也没有能拉动正向率的事件。",
+    judgment:
+      "这周看起来平静，但语音房已经该记进跨周清单，不要等它变成 P0。",
+    totals: {
+      feedback: 68,
+      feedbackDelta: -4,
+      uniqueReporters: 38,
+      synced: 9,
+      pending: 17,
+      replied: 28,
+    },
+    types: {
+      bug: { count: 19, delta: 1 },
+      suggestion: { count: 22, delta: 2 },
+      complaint: { count: 16, delta: 3 },
+      praise: { count: 11, delta: -2 },
+    },
+    sentiment: { negative: 34, neutral: 33, positive: 33 },
+    daily: [
+      { date: "08-10", label: "一", positive: 60, negative: 22, volume: 8 },
+      { date: "08-11", label: "二", positive: 58, negative: 24, volume: 10 },
+      { date: "08-12", label: "三", positive: 55, negative: 28, volume: 11 },
+      { date: "08-13", label: "四", positive: 62, negative: 21, volume: 9 },
+      { date: "08-14", label: "五", positive: 64, negative: 20, volume: 12 },
+      { date: "08-15", label: "六", positive: 67, negative: 18, volume: 10 },
+      { date: "08-16", label: "日", positive: 61, negative: 22, volume: 8 },
+    ],
+    issues: [
+      {
+        id: "voice-lag",
+        title: "语音房卡顿掉线",
+        summary: "同一批用户第二次提起，还没有集中爆发。",
+        type: "complaint",
+        priority: "P2",
+        mentions: 3,
+        delta: 2,
+        status: "logged",
+        owner: "语音",
+      },
+      {
+        id: "dark-mode",
+        title: "希望增加夜间模式",
+        summary: "建议区出现，尚未形成共识。",
+        type: "suggestion",
+        priority: "P2",
+        mentions: 3,
+        delta: 1,
+        status: "new",
+        owner: "体验",
+      },
+    ],
+    pipeline: [
+      { status: "new", label: "待确认", count: 17 },
+      { status: "logged", label: "已记录", count: 14 },
+      { status: "synced", label: "已同步研发", count: 9 },
+      { status: "replied", label: "已回复社区", count: 16 },
+      { status: "closed", label: "已关闭", count: 12 },
+    ],
+    channels: [
+      { name: "#general", count: 22 },
+      { name: "#feedback", count: 16 },
+      { name: "#bug-report", count: 12 },
+      { name: "#voice-lobby", count: 9 },
+      { name: "#announcements", count: 6 },
+      { name: "#events", count: 3 },
+    ],
+    quotes: [
+      {
+        id: "n1",
+        user: "echo",
+        channel: "#voice-lobby",
+        type: "complaint",
+        sentiment: "negative",
+        issueId: "voice-lag",
+        time: "08-14 21:18",
+        text: "语音又吞字了。上周说过一次，这周高峰还是这样。",
+        status: "logged",
+      },
+    ],
+  },
+  {
+    id: "w32",
+    weekNo: 32,
+    range: "2026.08.03 — 08.09",
+    rangeShort: "08.03 – 08.09",
+    narrative:
+      "反馈 71 条。频道结构讨论开始冒头，整体情绪平稳，没有需要拉群同步的事故。",
+    judgment:
+      "适合把建议收进需求池。这周不是救火周。",
+    totals: {
+      feedback: 71,
+      feedbackDelta: 2,
+      uniqueReporters: 40,
+      synced: 8,
+      pending: 14,
+      replied: 30,
+    },
+    types: {
+      bug: { count: 18, delta: -1 },
+      suggestion: { count: 26, delta: 4 },
+      complaint: { count: 13, delta: -2 },
+      praise: { count: 14, delta: 1 },
+    },
+    sentiment: { negative: 29, neutral: 34, positive: 37 },
+    daily: [
+      { date: "08-03", label: "一", positive: 62, negative: 20, volume: 9 },
+      { date: "08-04", label: "二", positive: 64, negative: 18, volume: 10 },
+      { date: "08-05", label: "三", positive: 60, negative: 22, volume: 11 },
+      { date: "08-06", label: "四", positive: 66, negative: 17, volume: 10 },
+      { date: "08-07", label: "五", positive: 70, negative: 15, volume: 12 },
+      { date: "08-08", label: "六", positive: 72, negative: 14, volume: 11 },
+      { date: "08-09", label: "日", positive: 65, negative: 19, volume: 8 },
+    ],
+    issues: [
+      {
+        id: "split-general",
+        title: "拆分 #general 刷屏",
+        summary: "有人第一次明确提出组队和反馈混在一起。",
+        type: "suggestion",
+        priority: "P2",
+        mentions: 3,
+        delta: 3,
+        status: "new",
+        owner: "社区",
+      },
+      {
+        id: "dark-mode",
+        title: "希望增加夜间模式",
+        summary: "时差党提出，当周只有两条。",
+        type: "suggestion",
+        priority: "P2",
+        mentions: 2,
+        delta: 2,
+        status: "new",
+        owner: "体验",
+      },
+    ],
+    pipeline: [
+      { status: "new", label: "待确认", count: 14 },
+      { status: "logged", label: "已记录", count: 19 },
+      { status: "synced", label: "已同步研发", count: 8 },
+      { status: "replied", label: "已回复社区", count: 18 },
+      { status: "closed", label: "已关闭", count: 12 },
+    ],
+    channels: [
+      { name: "#general", count: 24 },
+      { name: "#feedback", count: 18 },
+      { name: "#bug-report", count: 11 },
+      { name: "#announcements", count: 8 },
+      { name: "#voice-lobby", count: 6 },
+      { name: "#events", count: 4 },
+    ],
+    quotes: [
+      {
+        id: "m1",
+        user: "sora",
+        channel: "#feedback",
+        type: "suggestion",
+        sentiment: "neutral",
+        issueId: "dark-mode",
+        time: "08-06 01:40",
+        text: "晚上看公告太亮了。如果能做夜间模式，时差党会谢谢你们。",
+        status: "new",
+      },
+    ],
+  },
 ];
+
+export function summarizeBoard(weeks: WeekReport[]): BoardOverall {
+  const chronological = [...weeks].sort((a, b) => a.weekNo - b.weekNo);
+  const latest = chronological[chronological.length - 1];
+  const feedback = weeks.reduce((sum, item) => sum + item.totals.feedback, 0);
+  const reporters = weeks.reduce(
+    (sum, item) => sum + item.totals.uniqueReporters,
+    0
+  );
+  const avgPositive = Math.round(
+    weeks.reduce((sum, item) => sum + item.sentiment.positive, 0) / weeks.length
+  );
+  const avgNegative = Math.round(
+    weeks.reduce((sum, item) => sum + item.sentiment.negative, 0) / weeks.length
+  );
+  const types: Record<FeedbackType, number> = {
+    bug: 0,
+    suggestion: 0,
+    complaint: 0,
+    praise: 0,
+  };
+  for (const week of weeks) {
+    (Object.keys(types) as FeedbackType[]).forEach((key) => {
+      types[key] += week.types[key].count;
+    });
+  }
+
+  const issueMap = new Map<string, StandingIssue>();
+  for (const week of chronological) {
+    for (const issue of week.issues) {
+      const prev = issueMap.get(issue.id);
+      if (!prev) {
+        issueMap.set(issue.id, {
+          id: issue.id,
+          title: issue.title,
+          type: issue.type,
+          mentions: issue.mentions,
+          weekCount: 1,
+          status: issue.status,
+          owner: issue.owner,
+        });
+      } else {
+        prev.mentions += issue.mentions;
+        prev.weekCount += 1;
+        prev.status = issue.status;
+        prev.owner = issue.owner;
+      }
+    }
+  }
+
+  const standing = [...issueMap.values()]
+    .filter((item) => item.weekCount >= 2 && item.status !== "closed")
+    .sort((a, b) => b.weekCount - a.weekCount || b.mentions - a.mentions);
+
+  const trend = chronological.map((week) => ({
+    weekNo: week.weekNo,
+    label: `W${week.weekNo}`,
+    range: week.rangeShort,
+    positive: week.sentiment.positive,
+    negative: week.sentiment.negative,
+    volume: week.totals.feedback,
+  }));
+
+  const first = chronological[0];
+  const range = `${first.range.slice(0, 10)} — ${latest.range.slice(-5)}`;
+  const standingTitles = standing
+    .slice(0, 2)
+    .map((item) => item.title)
+    .join("、");
+
+  return {
+    weekCount: weeks.length,
+    range,
+    feedback,
+    reporters,
+    avgPositive,
+    avgNegative,
+    types,
+    standing,
+    trend,
+    narrative: `近 ${weeks.length} 周累计有效反馈 ${feedback} 条。大盘正向率在 ${Math.min(...trend.map((item) => item.positive))}%–${Math.max(...trend.map((item) => item.positive))}% 之间摆动，没有单周崩盘。跨周未收口的是${standingTitles || "暂无重复议题"}；最新一周的新爆发要和这些慢性问题分开看。`,
+    judgment:
+      "先看跨周未关，再看本周新爆发。不要用单周情绪代替整体判断。",
+  };
+}

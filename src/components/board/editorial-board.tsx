@@ -6,13 +6,13 @@ import { ArrowRight, Search, X } from "lucide-react";
 
 import { FinderWindow } from "@/components/board/finder-window";
 import { Input } from "@/components/ui/input";
-import { statusLabel, typeMeta } from "@/lib/data";
+import { statusLabel, summarizeBoard, typeMeta } from "@/lib/data";
 import type { FeedbackType, Quote, WeekReport } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const chapters = [
-  { no: "01", id: "overview", label: "本周概览", short: "概览", en: "Overview" },
-  { no: "02", id: "types", label: "反馈分类", short: "分类", en: "Categories" },
+  { no: "01", id: "overall", label: "整体舆情", short: "整体", en: "Overall" },
+  { no: "02", id: "week", label: "本周概览", short: "本周", en: "This Week" },
   { no: "03", id: "issues", label: "高频议题", short: "议题", en: "Issues" },
   { no: "04", id: "quotes", label: "原话摘录", short: "原话", en: "Voices" },
 ] as const;
@@ -29,6 +29,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
   const [activeQuote, setActiveQuote] = useState<Quote | null>(null);
 
   const week = weeks.find((item) => item.id === weekId) ?? weeks[0];
+  const overall = useMemo(() => summarizeBoard(weeks), [weeks]);
 
   const quotes = useMemo(() => {
     return week.quotes.filter((quote) => {
@@ -68,13 +69,16 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               社区舆情看板
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-black/50">
-              一张独立的社区舆情页。把 Discord 里的缺陷、建议、吐槽和好评收成可跟进的议题，而不是逐日流水账。
+              周更看板。先看整体大盘，再点进某一周的概览、议题和原话。
             </p>
           </div>
 
           <div className="flex flex-col items-start gap-3 lg:items-end">
             <p className="font-serif text-[15px] tracking-[0.22em] text-black/70">
-              SENTIMENT BOARD · WEEK {week.weekNo}
+              周更 · {overall.range}
+            </p>
+            <p className="text-[11px] tracking-[0.14em] text-black/40">
+              选择周次，只替换本周及以下栏目
             </p>
             <div className="flex flex-wrap items-center gap-2">
               {weeks.map((item) => (
@@ -113,7 +117,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         </nav>
 
         <section
-          id="overview"
+          id="overall"
           className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6"
         >
           <article className="paper-card relative min-h-[340px] overflow-hidden rounded-[28px] p-7 sm:p-8">
@@ -125,7 +129,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 DIRECTORY
               </h2>
               <p className="pt-1 text-right text-[10px] leading-4 tracking-[0.16em] text-black/40">
-                volume {String(week.weekNo).padStart(2, "0")}
+                {overall.weekCount} weeks
                 <br />
                 Sentiment Board
               </p>
@@ -134,13 +138,13 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               Chapter 01
             </p>
             <h3 className="relative mt-1 font-display text-[32px] leading-none sm:text-[38px]">
-              <span className="font-serif">01</span> 本周概览
+              <span className="font-serif">01</span> 整体舆情
             </h3>
 
             <FinderWindow
               className="relative mt-8"
-              title={`社区舆情看板 / week ${week.weekNo}`}
-              path="社区 / 舆情看板 / 目录"
+              title="社区舆情看板 / 目录"
+              path="整体 / 本周 / 议题 / 原话"
             >
               <ul>
                 {chapters.map((chapter) => (
@@ -181,13 +185,13 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               </div>
               <div className="absolute bottom-4 left-4 right-4 max-w-[78%]">
                 <p className="font-serif text-[11px] tracking-[0.28em] text-white/70">
-                  WEEKLY NARRATIVE
+                  OVERALL SENTIMENT
                 </p>
                 <h3 className="mt-1 font-display text-[26px] leading-tight text-white sm:text-[32px]">
-                  本周主线
+                  整体舆情
                 </h3>
                 <p className="mt-2 text-[13px] leading-5 text-white/85">
-                  {week.narrative}
+                  {overall.narrative}
                 </p>
               </div>
               <div className="absolute bottom-4 right-4 hidden w-[92px] flex-col gap-2 sm:flex">
@@ -213,7 +217,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             </div>
           </article>
 
-          <article id="types" className="paper-card relative min-h-[320px] overflow-hidden rounded-[28px]">
+          <article id="week" className="paper-card relative min-h-[320px] overflow-hidden rounded-[28px]">
             <Image
               src="/editorial/tulips.jpg"
               alt=""
@@ -225,11 +229,14 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <div className="relative p-7 sm:p-8">
               <div className="flex items-start justify-between gap-3 text-[10px] tracking-[0.18em] text-black/40">
                 <span>Chapter 02</span>
-                <span>Feedback / Workflow</span>
+                <span>Week {week.weekNo}</span>
               </div>
               <h2 className="mt-6 font-display text-[28px] leading-none sm:text-[34px]">
-                02 反馈分类
+                02 本周概览
               </h2>
+              <p className="mt-3 max-w-[36rem] text-[13px] leading-6 text-black/55">
+                {week.narrative}
+              </p>
               <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {(Object.keys(typeMeta) as FeedbackType[]).map((type) => {
                   const meta = typeMeta[type];
@@ -288,7 +295,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               </p>
               <div className="mt-8">
                 <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-                  CHAPTER 01 · WEEKLY READ
+                  CHAPTER 02 · THIS WEEK
                 </p>
                 <h2 className="mt-2 font-display text-[28px] leading-none sm:text-[34px]">
                   本周判断
@@ -392,7 +399,113 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         </section>
 
         <p className="mt-10 font-serif text-[12px] tracking-[0.28em] text-black/35">
-          CHAPTER 01 · 本周概览
+          CHAPTER 01 · 整体舆情
+        </p>
+        <section className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+          {[
+            ["累计反馈", overall.feedback, `${overall.weekCount} 周`],
+            ["累计发言", overall.reporters, "人次"],
+            ["四周正向率", `${overall.avgPositive}%`, `负向 ${overall.avgNegative}%`],
+            ["跨周未关", overall.standing.length, "重复议题"],
+            ["缺陷累计", overall.types.bug, "条"],
+            ["建议累计", overall.types.suggestion, "条"],
+          ].map(([label, value, note]) => (
+            <div
+              key={String(label)}
+              className="paper-card rounded-[22px] px-4 py-4"
+            >
+              <p className="text-[11px] tracking-[0.14em] text-black/40">
+                {label}
+              </p>
+              <p className="mt-2 font-serif text-[28px] leading-none tabular-nums">
+                {value}
+              </p>
+              <p className="mt-2 text-[11px] text-black/40">{note}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="paper-card mt-5 rounded-[28px] p-6 sm:p-8">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
+                CHAPTER 01 · WEEKLY TREND
+              </p>
+              <h2 className="mt-1 font-display text-2xl">周度情绪</h2>
+            </div>
+            <p className="max-w-md text-[13px] leading-5 text-black/45">
+              {overall.judgment} 柱高是当周反馈量，深色是负向占比。
+            </p>
+          </div>
+          <div className="mt-8 flex items-end gap-2 sm:gap-4">
+            {overall.trend.map((point) => {
+              const height = 40 + point.volume * 1.2;
+              const active = point.weekNo === week.weekNo;
+              return (
+                <button
+                  key={point.weekNo}
+                  type="button"
+                  onClick={() => {
+                    const match = weeks.find((item) => item.weekNo === point.weekNo);
+                    if (match) {
+                      setWeekId(match.id);
+                      resetFilters();
+                      scrollToId("week");
+                    }
+                  }}
+                  className="group flex flex-1 flex-col items-center gap-2"
+                >
+                  <div
+                    className={cn(
+                      "relative w-full max-w-14 overflow-hidden rounded-full",
+                      active ? "bg-ink/15" : "bg-black/8"
+                    )}
+                    style={{ height }}
+                  >
+                    <span
+                      className="absolute bottom-0 left-0 right-0 bg-ink/80"
+                      style={{ height: `${point.negative}%` }}
+                    />
+                  </div>
+                  <span
+                    className={cn(
+                      "font-serif text-sm",
+                      active ? "text-ink" : "text-black/50 group-hover:text-ink"
+                    )}
+                  >
+                    {point.label}
+                  </span>
+                  <span className="text-[10px] tabular-nums text-black/35">
+                    {point.range}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {overall.standing.length > 0 && (
+            <ul className="mt-8 divide-y divide-black/8 border-t border-black/8">
+              {overall.standing.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex flex-wrap items-baseline justify-between gap-2 py-3 text-[13px]"
+                >
+                  <span>
+                    <span className="font-display text-[16px]">{item.title}</span>
+                    <span className="ml-2 text-black/40">
+                      {typeMeta[item.type].zh} · 连续 {item.weekCount} 周
+                    </span>
+                  </span>
+                  <span className="font-serif tabular-nums text-black/45">
+                    {item.mentions} 条 · {statusLabel[item.status]}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <p className="mt-10 font-serif text-[12px] tracking-[0.28em] text-black/35">
+          CHAPTER 02 · 本周概览 · WEEK {week.weekNo}
         </p>
         <section className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
           {[
@@ -426,7 +539,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="font-serif text-[11px] tracking-[0.28em] text-black/40">
-                CHAPTER 01 · SENTIMENT ARC
+                CHAPTER 02 · SENTIMENT ARC
               </p>
               <h2 className="mt-1 font-display text-2xl">情绪弧线</h2>
             </div>

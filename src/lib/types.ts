@@ -40,6 +40,39 @@ export type DailyPoint = {
   volume: number;
 };
 
+export type TrendPoint = {
+  weekNo: number;
+  label: string;
+  range: string;
+  positive: number;
+  negative: number;
+  volume: number;
+};
+
+export type StandingIssue = {
+  id: string;
+  title: string;
+  type: FeedbackType;
+  mentions: number;
+  weekCount: number;
+  status: Status;
+  owner: string;
+};
+
+export type BoardOverall = {
+  weekCount: number;
+  range: string;
+  feedback: number;
+  reporters: number;
+  avgPositive: number;
+  avgNegative: number;
+  types: Record<FeedbackType, number>;
+  standing: StandingIssue[];
+  trend: TrendPoint[];
+  narrative: string;
+  judgment: string;
+};
+
 export type WeekReport = {
   id: string;
   weekNo: number;
