@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Search, X } from "lucide-react";
 
 import { FinderWindow } from "@/components/board/finder-window";
@@ -25,11 +25,39 @@ function pct(share: number) {
   return `${(share * 100).toFixed(1)}%`;
 }
 
+const monthNames = [
+  "",
+  "一月",
+  "二月",
+  "三月",
+  "四月",
+  "五月",
+  "六月",
+  "七月",
+  "八月",
+  "九月",
+  "十月",
+  "十一月",
+  "十二月",
+];
+
+function weeksByMonth(weeks: WeekReport[]) {
+  const map = new Map<number, WeekReport[]>();
+  for (const item of weeks) {
+    const month = Number(item.rangeShort.slice(0, 2));
+    const list = map.get(month) ?? [];
+    list.push(item);
+    map.set(month, list);
+  }
+  return [...map.entries()].sort((a, b) => b[0] - a[0]);
+}
+
 export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
   const [weekId, setWeekId] = useState(weeks[0].id);
   const [categoryFilter, setCategoryFilter] = useState<string | "all">("all");
   const [query, setQuery] = useState("");
   const [activeQuote, setActiveQuote] = useState<Quote | null>(null);
+  const [weekPickerOpen, setWeekPickerOpen] = useState(false);
 
   const week = weeks.find((item) => item.id === weekId) ?? weeks[0];
   const overall = useMemo(() => summarizeBoard(weeks), [weeks]);
@@ -62,7 +90,26 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
   function selectWeek(id: string) {
     setWeekId(id);
     resetFilters();
+    setWeekPickerOpen(false);
+    scrollToId("week");
   }
+
+  function openWeekPicker() {
+    setWeekPickerOpen(true);
+  }
+
+  useEffect(() => {
+    if (!weekPickerOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setWeekPickerOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [weekPickerOpen]);
 
   return (
     <div className="dot-grid relative min-h-screen overflow-x-hidden">
@@ -84,30 +131,17 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             </p>
           </div>
 
-          <div className="flex max-w-xl flex-col items-start gap-3 lg:items-end">
+          <div className="flex flex-col items-start gap-3 lg:items-end">
             <p className="font-serif text-[15px] tracking-[0.22em] text-black/70">
               周更 · {overall.range}
             </p>
-            <p className="text-[11px] tracking-[0.14em] text-black/40">
-              选择周次，只替换本周及以下栏目
-            </p>
-            <div className="flex max-h-24 flex-wrap justify-start gap-2 overflow-y-auto lg:justify-end">
-              {weeks.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => selectWeek(item.id)}
-                  className={cn(
-                    "rounded-full border px-3 py-1 font-serif text-sm tracking-wide transition-colors",
-                    item.id === week.id
-                      ? "border-ink bg-ink text-white"
-                      : "border-black/15 bg-white/70 text-black/60 hover:border-black/30"
-                  )}
-                >
-                  {item.rangeShort}
-                </button>
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={openWeekPicker}
+              className="rounded-full border border-black/15 bg-white px-4 py-2 font-serif text-sm tracking-wide hover:border-black/40"
+            >
+              查看一周
+            </button>
           </div>
         </header>
 
@@ -117,6 +151,12 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <a
               key={item.id}
               href={`#${item.id}`}
+              onClick={(event) => {
+                if (item.id === "week") {
+                  event.preventDefault();
+                  openWeekPicker();
+                }
+              }}
               className="transition-colors hover:text-ink"
             >
               {item.no} {item.short}
@@ -158,7 +198,10 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                   <li key={chapter.id}>
                     <button
                       type="button"
-                      onClick={() => scrollToId(chapter.id)}
+                      onClick={() => {
+                        if (chapter.id === "week") openWeekPicker();
+                        else scrollToId(chapter.id);
+                      }}
                       className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-[13px] hover:bg-white/70"
                     >
                       <span className="inline-flex size-7 items-center justify-center rounded-md bg-[#eadf9a]/80 font-serif text-[12px]">
@@ -219,7 +262,13 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             <div className="relative p-7 sm:p-8">
               <div className="flex items-start justify-between gap-3 text-[10px] tracking-[0.18em] text-black/40">
                 <span>Chapter 02</span>
-                <span>{week.rangeShort}</span>
+                <button
+                  type="button"
+                  onClick={openWeekPicker}
+                  className="tracking-[0.14em] text-black/55 underline-offset-4 hover:text-ink hover:underline"
+                >
+                  {week.rangeShort} · 换一周
+                </button>
               </div>
               <h2 className="mt-6 font-display text-[28px] leading-none sm:text-[34px]">
                 02 本周概览
@@ -646,6 +695,77 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
           </p>
         </footer>
       </div>
+
+      {weekPickerOpen && (
+        <div className="dot-grid fixed inset-0 z-50 overflow-y-auto">
+          <div className="mx-auto w-full max-w-[1280px] px-4 py-8 sm:px-8 lg:px-10">
+            <div className="flex items-center justify-between gap-4">
+              <p className="font-serif text-[11px] tracking-[0.38em] text-black/45">
+                DISCORD · 社区看板
+              </p>
+              <button
+                type="button"
+                onClick={() => setWeekPickerOpen(false)}
+                className="rounded-full border border-black/15 bg-white px-4 py-2 font-serif text-sm tracking-wide hover:border-black/40"
+              >
+                返回
+              </button>
+            </div>
+            <p className="mt-10 font-serif text-[11px] tracking-[0.28em] text-black/40">
+              THIS WEEK
+            </p>
+            <h2 className="mt-2 font-display text-[34px] leading-none sm:text-[44px]">
+              看哪一周
+            </h2>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-black/50">
+              按月进入。选定后回到本周概览、议题和原话。
+            </p>
+            <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {weeksByMonth(weeks).map(([month, items]) => (
+                <section
+                  key={month}
+                  className="paper-card rounded-[28px] p-6 sm:p-7"
+                >
+                  <p className="font-serif text-[13px] tracking-[0.22em] text-black/35">
+                    {monthNames[month]}
+                  </p>
+                  <ul className="mt-4">
+                    {items.map((item) => {
+                      const active = item.id === week.id;
+                      return (
+                        <li key={item.id}>
+                          <button
+                            type="button"
+                            onClick={() => selectWeek(item.id)}
+                            className={cn(
+                              "flex w-full items-baseline justify-between gap-4 rounded-2xl px-3 py-2.5 text-left transition-colors",
+                              active
+                                ? "bg-ink text-white"
+                                : "hover:bg-black/[0.04]"
+                            )}
+                          >
+                            <span className="font-display text-[17px]">
+                              {item.rangeShort}
+                            </span>
+                            <span
+                              className={cn(
+                                "font-serif text-sm tabular-nums",
+                                active ? "text-white/70" : "text-black/40"
+                              )}
+                            >
+                              {item.total} 条
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {activeQuote && (
         <div
