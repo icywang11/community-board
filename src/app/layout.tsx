@@ -21,9 +21,9 @@ const notoSerif = Noto_Serif_SC({
 });
 
 export const metadata: Metadata = {
-  title: "ICY 社区舆情看板",
+  title: "社区舆情看板",
   description:
-    "由 ICY 整理的 Discord 社区舆情看板：整体大盘、本周概览、高频议题、建议与动作、原话摘录。",
+    "由 ICY 搭建的 Discord 社区舆情看板：整体大盘、本周概览、高频议题、建议与动作、原话摘录。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

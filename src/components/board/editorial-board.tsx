@@ -178,13 +178,16 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         <header className="mb-8 flex flex-col gap-6 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="font-serif text-[11px] tracking-[0.38em] text-black/45">
-              ICY · DISCORD
+              DISCORD · 社区看板
             </p>
             <h1 className="mt-2 font-display text-[34px] leading-none tracking-tight sm:text-[44px]">
-              ICY 社区舆情看板
+              社区舆情看板
             </h1>
+            <p className="mt-3 font-serif text-[15px] tracking-[0.18em] text-black/70">
+              由 ICY 搭建
+            </p>
             <p className="mt-3 max-w-xl text-sm leading-6 text-black/50">
-              本看板由 ICY 整理。Discord 社区周更，先看整体反复出现的主题，再点进某一周的类型、建议和原话。
+              周更看板。先看整体反复出现的主题，再点进某一周的类型、建议和原话。
             </p>
           </div>
 
@@ -203,7 +206,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
         </header>
 
         <nav className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-black/10 pb-3 text-[12px] tracking-[0.18em] text-black/40">
-          <span className="font-serif tracking-[0.28em] text-black/55">ICY</span>
+          <span className="font-serif tracking-[0.28em] text-black/55">社区</span>
           {chapters.map((item) => (
             <a
               key={item.id}
@@ -237,8 +240,6 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
                 {overall.weekCount} weeks
                 <br />
                 Sentiment Board
-                <br />
-                by ICY
               </p>
             </div>
             <p className="relative mt-8 font-serif text-[15px] tracking-wide text-black/45">
@@ -249,7 +250,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
             </h3>
             <FinderWindow
               className="relative mt-8"
-              title="ICY 社区舆情看板 / 目录"
+              title="社区舆情看板 / 目录"
               path="整体 / 本周 / 议题 / 建议 / 原话"
             >
               <ul>
@@ -289,12 +290,12 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/10" />
               <div className="absolute left-4 right-4 top-4 flex items-center justify-between text-[10px] tracking-[0.18em] text-white/80">
-                <span>ICY</span>
+                <span>社区看板</span>
                 <span>Chapter 01</span>
               </div>
               <div className="absolute bottom-4 left-4 right-4 max-w-[78%]">
                 <p className="font-serif text-[11px] tracking-[0.28em] text-white/70">
-                  ICY · OVERALL SENTIMENT
+                  OVERALL SENTIMENT
                 </p>
                 <h3 className="mt-1 font-display text-[26px] leading-tight text-white sm:text-[32px]">
                   整体舆情
@@ -914,10 +915,10 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
 
         <footer className="mt-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <p className="font-serif text-[12px] tracking-[0.28em] text-black/35">
-            / ICY · COMMUNITY SENTIMENT
+            / COMMUNITY SENTIMENT
           </p>
           <p className="rounded-full border border-black/10 bg-white px-4 py-2 font-serif text-sm tracking-[0.18em]">
-            ICY
+            由 ICY 搭建
           </p>
         </footer>
       </div>
@@ -927,7 +928,7 @@ export function EditorialBoard({ weeks }: { weeks: WeekReport[] }) {
           <div className="mx-auto w-full max-w-[1280px] px-4 py-8 sm:px-8 lg:px-10">
             <div className="flex items-center justify-between gap-4">
               <p className="font-serif text-[11px] tracking-[0.38em] text-black/45">
-                ICY · DISCORD
+                DISCORD · 社区看板
               </p>
               <button
                 type="button"
