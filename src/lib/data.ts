@@ -74,8 +74,8 @@ export function summarizeBoard(allWeeks: WeekReport[]): BoardOverall {
     standing,
     trend,
     topCategories,
-    narrative: `近 ${allWeeks.length} 周累计有效反馈 ${feedback} 条。反复出现的是${standingTitles}。下面按主题给了改法和运营动作，点进某一周再看当周结构。`,
+    narrative: `近 ${allWeeks.length} 周累计有效反馈 ${feedback} 条。反复出现的是${standingTitles}。单周情绪不能代替这条跨周主线，处理办法在建议一章。`,
     judgment:
-      "跨周反复的主题优先处理。每条都拆成产品 / 设计建议，以及运营这周能先做的事。",
+      "先看跨周反复出现的类型，再点进某一周。改法和运营动作集中在建议一章。",
   };
 }
