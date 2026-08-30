@@ -22,3 +22,5 @@ npm run dev
 ```
 
 浏览器打开 [http://127.0.0.1:3847](http://127.0.0.1:3847)。
+
+线上页面：[https://icywang11.github.io/community-board/](https://icywang11.github.io/community-board/)
