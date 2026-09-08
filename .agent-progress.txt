@@ -1,12 +1,5 @@
-Progress checkpoint 2026-09-08
-
-DONE:
-- Imported 8.24-8.30 (143 feedback, 9 categories) and 8.31-9.6 (87 feedback, 7 categories)
-- Total now 26 weeks / 4180 feedback (was 24 / 3950)
-- Default latest week is 8.31-9.6
-- Import script merges data/舆情.xlsx + data/舆情补*.xlsx
-- Committed & pushed to Origin main: 5ddaf71, 41ee148
-
-PENDING when you return:
-1. Redeploy GitHub Pages (need GitHub device auth again)
-2. Confirm local preview at http://127.0.0.1:3847 shows new weeks / updated overall range
+DONE 2026-09-08
+- 26 weeks / 4180 feedback
+- Latest week 8.31-9.6
+- Origin + GitHub main + GitHub Pages updated
+- Live: https://icywang11.github.io/community-board/
