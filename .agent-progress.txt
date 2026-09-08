@@ -1,0 +1,1 @@
+Progress 2026-09-08: imported weeks 8.24-8.30 (143) and 8.31-9.6 (87). Total 26 weeks / 4180 feedback. Committed on main as 5ddaf71. Origin pushed. GitHub Pages redeploy still pending (need token).
