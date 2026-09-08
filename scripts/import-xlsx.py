@@ -11,6 +11,7 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 XLSX = ROOT / "data" / "舆情.xlsx"
+SUPPLEMENTS = sorted((ROOT / "data").glob("舆情补*.xlsx"))
 OUT = ROOT / "src" / "lib" / "feedback.json"
 
 RANGE_RE = re.compile(r"^(\d{1,2})\.(\d{1,2})-(\d{1,2})\.(\d{1,2})$")
@@ -178,8 +179,23 @@ def parse_sheet(path: Path) -> list[dict]:
     return weeks
 
 
+def week_sort_key(week: dict) -> tuple[int, int]:
+    m = RANGE_RE.match(week["label"])
+    if not m:
+        return (0, 0)
+    return (int(m.group(1)), int(m.group(2)))
+
+
 def main() -> None:
-    weeks = parse_sheet(XLSX)
+    by_id: dict[str, dict] = {}
+    for path in [XLSX, *SUPPLEMENTS]:
+        if not path.exists():
+            continue
+        for week in parse_sheet(path):
+            by_id[week["id"]] = week
+            print(f"loaded {week['label']} ({week['total']}) from {path.name}")
+
+    weeks = sorted(by_id.values(), key=week_sort_key, reverse=True)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(
         json.dumps({"year": YEAR, "weeks": weeks}, ensure_ascii=False, indent=2),

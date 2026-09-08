@@ -2,6 +2,442 @@
   "year": 2026,
   "weeks": [
     {
+      "id": "w-8.31-9.6",
+      "label": "8.31-9.6",
+      "range": "2026.08.31 — 09.06",
+      "rangeShort": "08.31 – 09.06",
+      "categories": [
+        {
+          "id": "战斗流畅度",
+          "name": "战斗流畅度",
+          "count": 19,
+          "share": 0.1284,
+          "summary": "核心痛点集中在PvP战斗存在严重的网络延迟依赖问题（GeForce用户低延迟优势影响公平性）、公会竞技场与普通竞技场闪避机制不一致、弓箭射击消耗体力机制不合理、无名波攻击在GvG中过于强势等问题。",
+          "suggestion": "优化PvP网络同步机制，减少延迟对战斗判定的影响；统一各竞技场模式的闪避机制，消除不合理的差异；重新评估弓箭体力消耗机制，考虑移除或大幅降低消耗，或提升箭矢伤害作为补偿。"
+        },
+        {
+          "id": "美术建模",
+          "name": "美术建模",
+          "count": 16,
+          "share": 0.1081,
+          "summary": "核心需求为传说级披风/挂件开放染色功能、治疗路径特效存在性别刻板印象（粉色蝴蝶翅膀不适合男性角色）、玩家渴望更多可染色外观选项并愿意付费，同时包含发型自定义调整等诉求。",
+          "suggestion": "开放传说级披风/挂件的染色功能，提升外观自定义深度；为各职业路径特效提供多种风格选项（如中性/硬朗风格），避免性别刻板设计；推出可染色的付费外观，使用游戏内已有货币购买。"
+        },
+        {
+          "id": "外观染色与自定义",
+          "name": "外观染色与自定义",
+          "count": 13,
+          "share": 0.0878,
+          "summary": "玩家集中呼吁开放\"Forged in Fire\"套装头盔、披风、特效的染色功能，解决头盔与护甲颜色不匹配问题；同时请求发型饰品可染色、男性角色毛巾肩部特效可关闭、新增中性风格VFX特效选项、面部装备双插槽功能等外观自定义需求。",
+          "suggestion": "开放\"Forged in Fire\"套装全部位（头盔、披风、特效）染色功能；扩展发型饰品染色范围；新增男性角色毛巾肩部特效开关；为VFX特效提供中性/硬朗风格选项；增加面部装备双插槽支持半面罩与眼罩同时佩戴。"
+        },
+        {
+          "id": "货币与奖励系统",
+          "name": "货币与奖励系统",
+          "count": 12,
+          "share": 0.0811,
+          "summary": "玩家反馈兑换码仅限单角色使用不合理、120抽后累积奖励缺失导致抽卡动力不足、能量系统效率低下请求双倍能量活动、休闲玩法\"Cutie Clash\"请求永久回归、赛季追赶商店缺少高级材料（玄铁）补给等。",
+          "suggestion": "兑换码改为账号内多角色通用；新增120抽后累积货币兑换机制用于获取往期累积奖励；定期开启双倍能量活动；评估\"Cutie Clash\"永久化方案；在赛季追赶商店中增加5级/6级玄铁补给。"
+        },
+        {
+          "id": "玩法内容扩展",
+          "name": "玩法内容扩展",
+          "count": 11,
+          "share": 0.0743,
+          "summary": "玩家希望新增古琴/琵琶辅助治疗职业、世界BOSS可重复挑战功能、各区域NPC悬赏任务扩展、孤云门派上线、试炼按内功6阶对齐平衡、幽冥步6级后可升级、多人制作上限提升至99等玩法内容扩展需求。",
+          "suggestion": "评估古琴/琵琶辅助治疗职业的开发优先级；开放世界BOSS重复挑战功能（可降低奖励）；扩展各区域NPC悬赏任务并增加难度递进；推进孤云门派上线进度；试炼系统按内功6阶统一对齐；提升多人制作上限至99。"
+        },
+        {
+          "id": "武学内容",
+          "name": "武学内容",
+          "count": 10,
+          "share": 0.0676,
+          "summary": "玩家反馈自定义词缀装备箱产出低品质初始词缀性价比极低、无名波攻击在GvG中过于强势影响平衡、坦克定位武器选择单一，希望新增更多坦克型武器选项。",
+          "suggestion": "更新装备箱产出机制，使其与当前装备词缀商店同步提供有价值的词缀；对无名波攻击进行平衡性调整，特别是在GvG场景中适当削弱；开发新的坦克型武器（如横刀风格），丰富坦克定位的武器选择。"
+        },
+        {
+          "id": "bug与修复",
+          "name": "BUG与修复",
+          "count": 6,
+          "share": 0.0405,
+          "summary": "玩家反馈同伴MVP界面显示错误的猫、隐形火/穿墙火伤害BUG、\"无声之声\"武器解锁后轮盘仍锁定、幼年角色外观与成年不匹配、自定义词缀装备箱产出低品质词缀等问题。",
+          "suggestion": "修复同伴MVP界面显示错误问题；修复隐形火/穿墙火伤害判定BUG；修复\"无声之声\"武器解锁后轮盘仍锁定的问题；修复幼年角色外观与成年角色不匹配的问题；优化自定义词缀装备箱产出机制。"
+        }
+      ],
+      "quotes": [
+        {
+          "id": "w-8.31-9.6-战斗流畅度-1",
+          "categoryId": "战斗流畅度",
+          "category": "战斗流畅度",
+          "text": "Please fix the ping dependency of Drunken Fist in PvP. GeForce users are able to consistently dodge/deflect out of the Inebriate state light attack chain, among other things, while my ping is only 25-30ms."
+        },
+        {
+          "id": "w-8.31-9.6-战斗流畅度-2",
+          "categoryId": "战斗流畅度",
+          "category": "战斗流畅度",
+          "text": "Please make dodges for all weapons the same in Guild Arena as they are in Arena. Many weapons have shortened dodges in Guild Arena for no reason"
+        },
+        {
+          "id": "w-8.31-9.6-战斗流畅度-3",
+          "categoryId": "战斗流畅度",
+          "category": "战斗流畅度",
+          "text": "remove stamina from shooting arrows, or buff arrow damage a big amount. Stamina on arrows is unjustified."
+        },
+        {
+          "id": "w-8.31-9.6-美术建模-1",
+          "categoryId": "美术建模",
+          "category": "美术建模",
+          "text": "Make legendary drapes (ones from Harmonic core outfits) dyeable, a lot of them fit really well into their original outfits but they don't really fit into a lot of color themes people use with those outfits"
+        },
+        {
+          "id": "w-8.31-9.6-美术建模-2",
+          "categoryId": "美术建模",
+          "category": "美术建模",
+          "text": "Please also add less feminine option for vfx of healer paths. Having pink butterfly wings when you're playing male character looks ridiculous. It felt like some paths are gender coded by dev for no reason."
+        },
+        {
+          "id": "w-8.31-9.6-美术建模-3",
+          "categoryId": "美术建模",
+          "category": "美术建模",
+          "text": "dye-able free outfit for a price, using echo jades or pearls, hell I might even throw a core"
+        },
+        {
+          "id": "w-8.31-9.6-外观染色与自定义-1",
+          "categoryId": "外观染色与自定义",
+          "category": "外观染色与自定义",
+          "text": "The Forged in Fire FX and helmet should be able to change colors, i dont wanna have a white armor with a black helmet....."
+        },
+        {
+          "id": "w-8.31-9.6-外观染色与自定义-2",
+          "categoryId": "外观染色与自定义",
+          "category": "外观染色与自定义",
+          "text": "Please make the accessories on the hair dyeable. I dye my outfit a different palette and the hair ornaments look out of place, toggling it off looks so bland."
+        },
+        {
+          "id": "w-8.31-9.6-外观染色与自定义-3",
+          "categoryId": "外观染色与自定义",
+          "category": "外观染色与自定义",
+          "text": "make display headpiece toggle saved individually per outfit"
+        },
+        {
+          "id": "w-8.31-9.6-货币与奖励系统-1",
+          "categoryId": "货币与奖励系统",
+          "category": "货币与奖励系统",
+          "text": "Make Redeem Codes useable for multiple characters and not just once per account. I am not able to get the \"last sunset\" scenario background on all of my characters..."
+        },
+        {
+          "id": "w-8.31-9.6-货币与奖励系统-2",
+          "categoryId": "货币与奖励系统",
+          "category": "货币与奖励系统",
+          "text": "We need a double energy event"
+        },
+        {
+          "id": "w-8.31-9.6-货币与奖励系统-3",
+          "categoryId": "货币与奖励系统",
+          "category": "货币与奖励系统",
+          "text": "Please bring back Cutie Clash as a permanent feature! Even without a leaderboard it would still be a great Leisure Activity as an additional way to earn Jade Fish and Adventure Slips."
+        },
+        {
+          "id": "w-8.31-9.6-玩法内容扩展-1",
+          "categoryId": "玩法内容扩展",
+          "category": "玩法内容扩展",
+          "text": "Can we get a Guqin/Pipa support class with healing and AoE team buffs"
+        },
+        {
+          "id": "w-8.31-9.6-玩法内容扩展-2",
+          "categoryId": "玩法内容扩展",
+          "category": "玩法内容扩展",
+          "text": "Let us replay more bosses! World bosses would be very fun to replay, even without big rewards or any at all. It would be amazing if we can fight every boss like we can do campaign challanges with the ones we currently have..."
+        },
+        {
+          "id": "w-8.31-9.6-玩法内容扩展-3",
+          "categoryId": "玩法内容扩展",
+          "category": "玩法内容扩展",
+          "text": "Please add more npc bounties for each region with scaling difficulty from one region to the next!"
+        },
+        {
+          "id": "w-8.31-9.6-武学内容-1",
+          "categoryId": "武学内容",
+          "category": "武学内容",
+          "text": "Replace the Custom Affix Gear Box with the current one in the gear echoes shop, there is no good reason to buy it and get initial affixes you don't need."
+        },
+        {
+          "id": "w-8.31-9.6-武学内容-2",
+          "categoryId": "武学内容",
+          "category": "武学内容",
+          "text": "Nerf nameless wave attack. Especially in GvG."
+        },
+        {
+          "id": "w-8.31-9.6-武学内容-3",
+          "categoryId": "武学内容",
+          "category": "武学内容",
+          "text": "We need more tank options, not everyone like playing with spears/lance/glaives... maybe the next heng-dao style could be tank instead of DPS"
+        },
+        {
+          "id": "w-8.31-9.6-bug与修复-1",
+          "categoryId": "bug与修复",
+          "category": "BUG与修复",
+          "text": "Fix the companion MVP screen, it shows the wrong cat instead of the one the player equipped and often at times shows Scar with less fur"
+        },
+        {
+          "id": "w-8.31-9.6-bug与修复-2",
+          "categoryId": "bug与修复",
+          "category": "BUG与修复",
+          "text": "Invisible fire. Or the fire is behind the wall. I don't think the fire should pass through walls and put you on fire."
+        },
+        {
+          "id": "w-8.31-9.6-bug与修复-3",
+          "categoryId": "bug与修复",
+          "category": "BUG与修复",
+          "text": "fix: \"Silent Voice Carousel\" is locked even already used the \"Silent Voice Weaponry"
+        }
+      ],
+      "total": 87,
+      "narrative": "本周有效反馈 87 条。占比最高的是「战斗流畅度」19 条（12.8%），其次是「美术建模」16 条。",
+      "judgment": "优化PvP网络同步机制，减少延迟对战斗判定的影响。"
+    },
+    {
+      "id": "w-8.24-8.30",
+      "label": "8.24-8.30",
+      "range": "2026.08.24 — 08.30",
+      "rangeShort": "08.24 – 08.30",
+      "categories": [
+        {
+          "id": "界面交互",
+          "name": "界面交互",
+          "count": 50,
+          "share": 0.3497,
+          "summary": "玩家反馈包含请求新增麻将筹码转商币的兑换功能、演奏乐器时无法查看聊天、武学手册获取路径信息不全、可自动接受组队申请等交互体验问题。",
+          "suggestion": "新增货币兑换功能，支持麻将筹码按比例转换为商币；优化演奏、武学界面的交互逻辑，保留聊天窗口可见权限；完善武学手册的掉落信息，补充全区域怪物掉落说明；新增组队申请自动通过开关，支持自定义触发场景。"
+        },
+        {
+          "id": "探索功能优化",
+          "name": "探索功能优化",
+          "count": 18,
+          "share": 0.1259,
+          "summary": "玩家集中呼吁推出支持游戏进度同步的官方交互式地图（可自动追踪宝箱、任务、NPC交互、收集品完成状态），另外还包含请求清理世界频道刷屏内容、扩展训练假人功能、优化装备调律冷却、新增卡池返场机制、提升全局性能等通用需求。",
+          "suggestion": "优先评估官方同步交互式地图的开发方案，支持全区域宝箱、任务、收集品进度自动追踪；新增世界频道刷屏内容过滤机制，限制低等级账号发布非聊天类分享内容；扩展竞技场训练假人功能，支持自定义武器、技能、释放间隔；优化装备调律规则，下调5天的重调冷却时间，评估卡池长期返场机制的可行性。"
+        },
+        {
+          "id": "战斗流畅度",
+          "name": "战斗流畅度",
+          "count": 17,
+          "share": 0.1189,
+          "summary": "核心痛点集中在装备调律冷却时间过长、部分云游戏用户低延迟优势影响PVP公平性、难度模式无法切换、GVG存在异常负面状态BUG、拳套武器闪避韧性过强影响平衡等问题。",
+          "suggestion": "下调装备调律冷却时间至1天或直接取消；新增GeForce Now等云游戏用户专属标识，避免玩家误判作弊；开放难度模式切换权限，支持单账号至少1次模式切换机会；修复GVG异常醉酒状态的BUG，平衡拳套武器完美闪避的韧性机制，可考虑增加冷却时间。"
+        },
+        {
+          "id": "界面设计",
+          "name": "界面设计",
+          "count": 16,
+          "share": 0.1119,
+          "summary": "玩家希望自动buff面板支持同时设置两种食物、新增邮箱搜索功能、优化衣柜分类、支持UI自定义调整。",
+          "suggestion": "优化自动buff面板逻辑，支持同时配置最多两种食物buff；调整衣柜分类规则，拆分上衣、裤子、鞋履为独立分类；开放UI自定义权限，支持玩家调整界面元素的位置、大小、显隐状态；新增邮箱搜索功能，支持按发件人、附件类型检索邮件。"
+        },
+        {
+          "id": "美术建模",
+          "name": "美术建模",
+          "count": 11,
+          "share": 0.0769,
+          "summary": "核心需求为付费外观全部位染色、发型自定义调整、修复角色模型过细、外观穿模等问题，还有联动外观全球同步上线的诉求。",
+          "suggestion": "扩展外观染色范围，支持付费外观全部位自定义染色；优化角色基础模型，调整手部、腿部的粗细比例，修复披风等外观的物理穿模问题；推动后续联动外观实现全球服同步上线。"
+        },
+        {
+          "id": "武学内容",
+          "name": "武学内容",
+          "count": 11,
+          "share": 0.0769,
+          "summary": "玩家希望降低或取消装备调律的冷却和次数限制、新增治疗职业专属武学与武器、平衡各武学流派强度。",
+          "suggestion": "取消装备调律的次数限制，下调冷却时间；评估治疗职业专属新武学、新武器的开发优先级；平衡各武学流派强度，针对拳套等过强的闪避机制增加冷却限制。"
+        },
+        {
+          "id": "主线内容",
+          "name": "主线内容",
+          "count": 10,
+          "share": 0.0699,
+          "summary": "玩家反馈隐山区域鲁班锁解谜的选中提示不清晰，影响深度感知，建议增加可访问性设置。",
+          "suggestion": "优化鲁班锁解谜的选中提示，新增可访问性设置，支持玩家自定义选中拼图块的显示样式（全涂色/仅描边），降低解谜难度。"
+        },
+        {
+          "id": "操作易用性",
+          "name": "操作易用性",
+          "count": 8,
+          "share": 0.0559,
+          "summary": "玩家集中呼吁与第三方地图网站wwmmap.pages.dev合作开放API，同时反馈其他玩家VFX特效过多导致PS5性能低下、触发偏头痛，休闲活动匹配时间过长建议支持人机模式。",
+          "suggestion": "评估与第三方地图网站的合作可行性，或重新开放地图API接口；新增其他玩家VFX特效开关，支持玩家自定义特效显示等级，降低PS5端性能消耗；新增休闲活动人机匹配模式，非高峰时段玩家可选择与AI组队完成玩法。"
+        },
+        {
+          "id": "语言文本",
+          "name": "语言文本",
+          "count": 2,
+          "share": 0.014,
+          "summary": "玩家建议新增多字幕包切换功能，辅助语言学习。",
+          "suggestion": "评估多字幕同步显示功能的开发可行性，作为可选开关提供给有语言学习需求的玩家。"
+        }
+      ],
+      "quotes": [
+        {
+          "id": "w-8.24-8.30-界面交互-1",
+          "categoryId": "界面交互",
+          "category": "界面交互",
+          "text": "Please stop making shop appearance items limited-time only because some people will miss out. They should be permanently available in the shop.##Other..."
+        },
+        {
+          "id": "w-8.24-8.30-界面交互-2",
+          "categoryId": "界面交互",
+          "category": "界面交互",
+          "text": "There should be the option to auto complete mini games like pitch pot and fishing. It's a complete waste of time in order to 100% exploration as it ha..."
+        },
+        {
+          "id": "w-8.24-8.30-界面交互-3",
+          "categoryId": "界面交互",
+          "category": "界面交互",
+          "text": "add the ability to swap the mystic skills types with the builds. You can swap gear and mystic skills, but if you swap normal dragon's breath to dragon..."
+        },
+        {
+          "id": "w-8.24-8.30-探索功能优化-1",
+          "categoryId": "探索功能优化",
+          "category": "探索功能优化",
+          "text": "I would like to suggest an official interactive map feature inspired by wwmmap.pages.dev, with synchronization to each player's in-game progress. The ..."
+        },
+        {
+          "id": "w-8.24-8.30-探索功能优化-2",
+          "categoryId": "探索功能优化",
+          "category": "探索功能优化",
+          "text": "Feedback on Guild War Rewards. Hello, Guild War is currently the most participated and bonding activity in the guild, but the rewards still do not mat..."
+        },
+        {
+          "id": "w-8.24-8.30-探索功能优化-3",
+          "categoryId": "探索功能优化",
+          "category": "探索功能优化",
+          "text": "What happened to the custom music for the flute, which was announced in this roadmap?"
+        },
+        {
+          "id": "w-8.24-8.30-战斗流畅度-1",
+          "categoryId": "战斗流畅度",
+          "category": "战斗流畅度",
+          "text": "add ability to choose which boss we queue up for in Hero's Realm and Sword Trial. Currently it's random."
+        },
+        {
+          "id": "w-8.24-8.30-战斗流畅度-2",
+          "categoryId": "战斗流畅度",
+          "category": "战斗流畅度",
+          "text": "Improve TB Q tracking and Rat Rope Q. Why does it swing/spin on the opposite direction when im literally next to my opponent?"
+        },
+        {
+          "id": "w-8.24-8.30-战斗流畅度-3",
+          "categoryId": "战斗流畅度",
+          "category": "战斗流畅度",
+          "text": "can we please address the fact that you have not fixed invisible people in GVGs even tho you state that you did? Rather than rolling patch for animal ..."
+        },
+        {
+          "id": "w-8.24-8.30-界面设计-1",
+          "categoryId": "界面设计",
+          "category": "界面设计",
+          "text": "I am a solo player but I honestly don’t think that the game is in a great social atmosphere state. Although I do enjoy the social aspects of the game,..."
+        },
+        {
+          "id": "w-8.24-8.30-界面设计-2",
+          "categoryId": "界面设计",
+          "category": "界面设计",
+          "text": "Separate 1v1 Arena Leaderboards by Platform. 1v1 Arena is easily one of the most popular endgame activities, so much so that many active daily content..."
+        },
+        {
+          "id": "w-8.24-8.30-界面设计-3",
+          "categoryId": "界面设计",
+          "category": "界面设计",
+          "text": "Player vs Boss and Player vs Player Boost% should be interchangable or fused to one stat. God gear for either mode is already neigh impossible and the..."
+        },
+        {
+          "id": "w-8.24-8.30-美术建模-1",
+          "categoryId": "美术建模",
+          "category": "美术建模",
+          "text": "Please add Drunken Poet VFX to apply to Smolder as it does to Combustion <:goose_stare:1392474532006334577>"
+        },
+        {
+          "id": "w-8.24-8.30-美术建模-2",
+          "categoryId": "美术建模",
+          "category": "美术建模",
+          "text": "How do we apply a vivid scenario plan? Do we really have to set it up ourselves? If so, why? We get the plan so we don't have to go through the work o..."
+        },
+        {
+          "id": "w-8.24-8.30-美术建模-3",
+          "categoryId": "美术建模",
+          "category": "美术建模",
+          "text": "Can we have a more appealing male clothesless look? Please remove that ugly towel MC is wearing when not using an outfit. I don't think it's fair that..."
+        },
+        {
+          "id": "w-8.24-8.30-武学内容-1",
+          "categoryId": "武学内容",
+          "category": "武学内容",
+          "text": "I have been playing WWM since almost beginning of global release. In the beginning, I was in a small guild and had to fight a lot of raids with bots e..."
+        },
+        {
+          "id": "w-8.24-8.30-武学内容-2",
+          "categoryId": "武学内容",
+          "category": "武学内容",
+          "text": "remove time gating on gear retuning and gear resetting."
+        },
+        {
+          "id": "w-8.24-8.30-武学内容-3",
+          "categoryId": "武学内容",
+          "category": "武学内容",
+          "text": "Gear lock out timer for resets and re-rolling is too long! This system makes it so tedious and unnecessary for those that wants to play more or level ..."
+        },
+        {
+          "id": "w-8.24-8.30-主线内容-1",
+          "categoryId": "主线内容",
+          "category": "主线内容",
+          "text": "please add a skip button to the story mode text/cutscenes. Some players cannot handle the very long stories that you guys are producing and making the..."
+        },
+        {
+          "id": "w-8.24-8.30-主线内容-2",
+          "categoryId": "主线内容",
+          "category": "主线内容",
+          "text": "Have you been playing the mobile game since the Hidden Mountain update? It crashes every two hours, then gradually every ten minutes.In PvP? Crash.In ..."
+        },
+        {
+          "id": "w-8.24-8.30-主线内容-3",
+          "categoryId": "主线内容",
+          "category": "主线内容",
+          "text": "We've already been exploring the Hidden Mountain region for weeks. It feels immersion-breaking that the new Heaven’s Threshold story treats the area a..."
+        },
+        {
+          "id": "w-8.24-8.30-操作易用性-1",
+          "categoryId": "操作易用性",
+          "category": "操作易用性",
+          "text": "Core Issues & RequestsVertical Axis Rotation: Add support for vertical axis rotation on PS5 and all console platforms.Platform Feature Parity: Ensure ..."
+        },
+        {
+          "id": "w-8.24-8.30-操作易用性-2",
+          "categoryId": "操作易用性",
+          "category": "操作易用性",
+          "text": "In my opinion, it would be more comfortable to let us use the dpad to navigate a selection like this, with up and down on the dpad. And we could press..."
+        },
+        {
+          "id": "w-8.24-8.30-操作易用性-3",
+          "categoryId": "操作易用性",
+          "category": "操作易用性",
+          "text": "Please add a setting for the MMORPG camera mode that you can turn off or switch the key bind for \"opening the player profile\" by clicking the right mo..."
+        },
+        {
+          "id": "w-8.24-8.30-语言文本-1",
+          "categoryId": "语言文本",
+          "category": "语言文本",
+          "text": "I absolutely love Where Winds Meet and have already logged over 100 hours in the game, but as a player using a standard 512 GB SSD, the current instal..."
+        },
+        {
+          "id": "w-8.24-8.30-语言文本-2",
+          "categoryId": "语言文本",
+          "category": "语言文本",
+          "text": "Improve the UI (Why do we need to click 100 times to get anywhere?, why is there 100 menus for things and nested UI inside of nested UI) Improve the ..."
+        }
+      ],
+      "total": 143,
+      "narrative": "本周有效反馈 143 条。占比最高的是「界面交互」50 条（35.0%），其次是「探索功能优化」18 条。",
+      "judgment": "新增货币兑换功能，支持麻将筹码按比例转换为商币。"
+    },
+    {
       "id": "w-8.17-8.23",
       "label": "8.17-8.23",
       "range": "2026.08.17 — 08.23",
